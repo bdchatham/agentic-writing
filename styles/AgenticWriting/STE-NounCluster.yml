@@ -13,6 +13,11 @@
 #   - The tagger reads a verb that looks plural as a noun, so
 #     'strategy selection logic fails' is reported.
 # The rule stays at suggestion level because of both.
+#
+# Requires Vale 3.17.x or later. On 3.14.0 a sequence whose tokens are all
+# `tag:` entries matches nothing at all, so this rule silently stops firing.
+# A leading `pattern:` token restores it there, but a noun cluster has no
+# reliable leading literal, so that would narrow what the rule checks.
 extends: sequence
 message: "Noun cluster of more than three nouns: '%[1]s %[2]s %[3]s %[4]s'. Break it with 'of' or 'for'."
 level: suggestion
