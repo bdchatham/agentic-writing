@@ -1,0 +1,6 @@
+# Vale downloads these with `vale sync`. They are not ours to vendor.
+styles/write-good/
+styles/proselint/
+
+# macOS
+.DS_Store
