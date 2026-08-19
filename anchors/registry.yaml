@@ -60,6 +60,9 @@ anchors:
           part-of-speech tagger misses some clusters and tags a verb such as 'fails'
           as a noun, so STE-NounCluster reports a false positive as well as a false
           negative. It stays at suggestion level for that reason."
+        - "Whether a list item is a real instruction. STE-Gerund-Instruction
+          anchors to the Markdown list marker in raw text, so it also reads a
+          fenced code sample whose line starts with a marker and an -ing word."
     recognition:
       probe: "What concepts do you associate with 'ASD-STE100'?"
       expect: [controlled language, approved dictionary, procedures versus descriptions, sentence length limits, aerospace maintenance]
