@@ -1,11 +1,15 @@
-# ASD-STE100: do not write a noun cluster of more than three words.
-# This is a heuristic: it matches four or more consecutive capitalized or
-# lower-case nouns without a preposition or article between them. Expect false
-# positives on product names; add those to styles/Vocab/AgenticWriting/accept.txt.
-extends: existence
-message: "Possible noun cluster of more than three words: '%s'. Break it with 'of' or 'for'."
+# ASD-STE100: do not write a noun cluster of more than three nouns.
+#
+# The check uses Vale's Penn Treebank tagger and matches a run of four nouns
+# (NN, NNS, NNP, NNPS). The previous version guessed at nouns from word endings
+# and never matched anything, including the clusters in the fixture.
+# A product name that is genuinely one noun belongs in
+# styles/config/vocabularies/AgenticWriting/accept.txt.
+extends: sequence
+message: "Noun cluster of more than three nouns: '%[1]s %[2]s %[3]s %[4]s'. Break it with 'of' or 'for'."
 level: suggestion
-nonword: false
-scope: sentence
 tokens:
-  - '(?:\b[a-z]+(?:ion|ment|ity|ness|ance|ence|er|or|log|data|node|key|token|proxy)\b[ ]){3,}[a-z]+'
+  - tag: NN(P|S|PS)?
+  - tag: NN(P|S|PS)?
+  - tag: NN(P|S|PS)?
+  - tag: NN(P|S|PS)?
