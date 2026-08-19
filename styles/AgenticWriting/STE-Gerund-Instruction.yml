@@ -1,8 +1,33 @@
 # ASD-STE100: start an instruction with the imperative verb, not with an -ing form.
 # Scoped to list items, because that is where procedures live in Markdown.
+#
+# The '^' anchor binds to the start of a sentence inside the list item, not to
+# the start of the item. A second sentence in the same step is still a step, so
+# that behaviour is correct.
+#
+# 'exceptions' removes the closed class of words that end in -ing and are not
+# verbs. Without it the rule flagged 'Nothing', 'Everything', and 'During' in
+# this repository's own ADR. Add a word here only if it can never be a verb.
 extends: existence
-message: "Instruction starts with '-ing' form: '%s'. Use the imperative."
+message: "Instruction starts with the '-ing' form: '%s'. Use the imperative."
 level: error
 scope: list
+exceptions:
+  - Anything
+  - Ceiling
+  - During
+  - Evening
+  - Everything
+  - King
+  - Morning
+  - Nothing
+  - Ring
+  - Sibling
+  - Something
+  - Spring
+  - String
+  - Thing
+  - Things
+  - Wing
 tokens:
   - '^\s*[A-Za-z]+ing\b'
