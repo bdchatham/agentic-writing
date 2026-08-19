@@ -12,6 +12,7 @@ Usage:
 import argparse
 import pathlib
 import sys
+import textwrap
 
 try:
     import yaml
@@ -28,21 +29,52 @@ def load():
         return yaml.safe_load(fh)
 
 
+INTRO = (
+    "You write text that another agent or a non-native reader must parse without a "
+    "back-channel. Follow the anchors below. Each anchor names a public standard, so you "
+    "can resolve it from the name alone. A more specific instruction from the user or from "
+    "the file you edit takes precedence on whatever it addresses."
+)
+
+VERIFY = [
+    "Run `vale <path>` before you report the work as done. A finding names a rule. A rule "
+    "names a clause. If you disagree with a finding, say which rule and why. Do not silence "
+    "a rule to make the output pass.",
+    "Vale checks part of ASD-STE100, not all of it. `vale` exit code 0 means \"no finding "
+    "at or above the gate\", not \"compliant\".",
+]
+
+WIDTH = 90
+
+
 def agents(reg):
-    out = [BANNER, "# Writing contract", ""]
-    for a in reg["anchors"]:
-        out.append(f"- **{a['name']}** — {a['invoke_as'].strip()}")
-    out += [
-        "",
-        "## Verify before you claim compliance",
-        "",
-        "Run `vale <path>` before you report the work as done. A finding names a rule.",
-        "A rule names a clause in a public standard.",
-        "",
-    ]
-    partial = [a["id"] for a in reg["anchors"] if a["verifier"].get("coverage") != "full"]
-    out.append(f"Vale coverage is not full for: {', '.join(partial)}.")
-    return "\n".join(out)
+    """The model-context contract.
+
+    Prose lives here because it describes the contract as a whole. Per-anchor text
+    lives in the registry under `context`. An anchor with no `context` block is not
+    part of the contract and is omitted — arc42 is the current example.
+    """
+    listed = sorted(
+        (a for a in reg["anchors"] if a.get("context")),
+        key=lambda a: a["context"]["order"],
+    )
+
+    out = [BANNER, "# Writing contract", "", textwrap.fill(INTRO, WIDTH, break_on_hyphens=False), ""]
+    for a in listed:
+        c = a["context"]
+        out.append(
+            textwrap.fill(
+                f"**{c['label']}** — {' '.join(c['text'].split())}",
+                WIDTH,
+                initial_indent="- ",
+                subsequent_indent="  ",
+                break_on_hyphens=False,
+            )
+        )
+    out += ["", "## Verify before you claim compliance", ""]
+    for para in VERIFY:
+        out += [textwrap.fill(para, WIDTH, break_on_hyphens=False), ""]
+    return "\n".join(out).rstrip("\n")
 
 
 def table(reg):

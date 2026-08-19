@@ -38,6 +38,13 @@ anchors:
       A controlled language built so that a reader who cannot ask a follow-up question
       reads the text one way only. An agent parsing another agent's output is in that
       position: no back-channel exists.
+    context:
+      order: 1
+      label: ASD-STE100 Simplified Technical English
+      text: >-
+        approved words in their approved part of speech, active voice, simple tenses, one
+        instruction per sentence, no more than three nouns in a noun cluster. Procedures: 20
+        words per sentence. Descriptions: 25 words.
     verifier:
       coverage: partial
       rules:
@@ -81,6 +88,12 @@ anchors:
       not a requirement.
     rationale: >-
       Uppercase marks obligation and removes the ambiguity of ordinary "should".
+    context:
+      order: 2
+      label: RFC 2119
+      text: >-
+        in a specification, write MUST, SHOULD, and MAY in uppercase. Do not use them for a
+        statement that is not a requirement.
     verifier:
       coverage: full
       rules: [AgenticWriting.RFC2119-Keywords]
@@ -103,6 +116,11 @@ anchors:
     rationale: >-
       Five templates cover almost every requirement, and each one is testable by
       construction because trigger, state, and response are separate slots.
+    context:
+      order: 5
+      label: EARS
+      text: >-
+        write a requirement as ubiquitous, WHEN, IF..THEN, WHILE, or WHERE.
     verifier:
       coverage: partial
       rules: [AgenticWriting.EARS-Shall]
@@ -127,6 +145,11 @@ anchors:
     rationale: >-
       Most bad documentation mixes two modes on one page. Naming the mode first
       removes the most common structural defect.
+    context:
+      order: 4
+      label: Diátaxis
+      text: >-
+        one page is a tutorial, a how-to guide, reference, or explanation. Not two.
     verifier:
       coverage: none
       rules: []
@@ -149,6 +172,11 @@ anchors:
       Decision, Consequences. Supersede; never delete.
     rationale: >-
       Fixed slots force the author to state the forces and the cost, not only the choice.
+    context:
+      order: 6
+      label: ADR (Nygard)
+      text: >-
+        a decision goes in `docs/adr/` with Status, Context, Decision, Consequences.
     verifier:
       coverage: partial
       rules:
@@ -198,6 +226,11 @@ anchors:
       type(optional scope)!: description.
     rationale: >-
       Machine-readable intent. A release tool can derive the version bump from it.
+    context:
+      order: 7
+      label: Conventional Commits 1.0.0
+      text: >-
+        `type(scope)!: description`.
     verifier:
       coverage: full
       rules: []
@@ -220,6 +253,11 @@ anchors:
       supporting detail after it.
     rationale: >-
       The reader may stop after one sentence. Make that sentence sufficient.
+    context:
+      order: 3
+      label: BLUF
+      text: >-
+        put the conclusion and the requested action in the first sentence.
     verifier:
       coverage: none
       rules: []

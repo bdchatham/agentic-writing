@@ -12,9 +12,11 @@ you edit takes precedence on whatever it addresses.
 - **RFC 2119** — in a specification, write MUST, SHOULD, and MAY in uppercase. Do not use
   them for a statement that is not a requirement.
 - **BLUF** — put the conclusion and the requested action in the first sentence.
-- **Diátaxis** — one page is a tutorial, a how-to guide, reference, or explanation. Not two.
+- **Diátaxis** — one page is a tutorial, a how-to guide, reference, or explanation. Not
+  two.
 - **EARS** — write a requirement as ubiquitous, WHEN, IF..THEN, WHILE, or WHERE.
-- **ADR (Nygard)** — a decision goes in `docs/adr/` with Status, Context, Decision, Consequences.
+- **ADR (Nygard)** — a decision goes in `docs/adr/` with Status, Context, Decision,
+  Consequences.
 - **Conventional Commits 1.0.0** — `type(scope)!: description`.
 
 ## Verify before you claim compliance
