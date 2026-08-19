@@ -1,0 +1,15 @@
+# Project Technical Names and Technical Verbs.
+# ASD-STE100 allows a Technical Name that the project defines. Putting it here
+# makes the decision reviewable in Git instead of implicit in a prompt.
+Kubernetes
+Vale
+ASD-STE100
+Diátaxis
+arc42
+OpenSTE
+STEMG
+ConfigMap
+[Ii]diomatic
+reconcile
+reconciler
+idempotent

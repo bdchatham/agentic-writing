@@ -1,0 +1,217 @@
+# The single source of truth for this repository.
+#
+# Every consumer is generated from this file: the Claude Code output style, the
+# AGENTS.md fragment, the eval matrix, and the docs table. Do not hand-edit a
+# generated consumer.
+#
+# Schema notes
+#   invoke_as        The exact string that goes into a model's context. Keep it short.
+#                    An anchor that needs a paragraph of explanation is not an anchor.
+#   verifier.coverage full | partial | none
+#                    How much of the standard Vale can check. `none` is a legitimate
+#                    value and it must be stated, not hidden.
+#   recognition       The probe that tests whether a model still resolves the term.
+#                    `verified` is per model. An empty list means "not yet tested".
+
+version: 1
+
+defaults:
+  verifier:
+    kind: vale
+    style: AgenticWriting
+
+anchors:
+
+  - id: asd-ste100
+    name: ASD-STE100 Simplified Technical English
+    edition: "Issue 9, January 2025"
+    steward: ASD / STEMG
+    url: https://www.asd-ste100.org/
+    license: proprietary-free-download
+    redistributable: false
+    applies_to: [prose, procedures, tool-descriptions, error-messages, agent-instructions]
+    invoke_as: >-
+      Write all English in ASD-STE100 Simplified Technical English: approved words in
+      their approved part of speech, active voice, simple tenses, one instruction per
+      sentence, no more than three nouns in a noun cluster.
+    rationale: >-
+      A controlled language built so that a reader who cannot ask a follow-up question
+      reads the text one way only. An agent parsing another agent's output is in that
+      position: no back-channel exists.
+    verifier:
+      coverage: partial
+      rules:
+        - AgenticWriting.STE-SentenceLength-Procedure
+        - AgenticWriting.STE-SentenceLength-Description
+        - AgenticWriting.STE-Passive
+        - AgenticWriting.STE-Contractions
+        - AgenticWriting.STE-NounCluster
+        - AgenticWriting.STE-Gerund-Instruction
+        - AgenticWriting.STE-PhrasalVerbs
+        - AgenticWriting.STE-ApprovedWords
+      not_checkable:
+        - "One approved meaning per word in context (needs word-sense judgement)."
+        - "Correct choice of Technical Name versus Technical Verb."
+        - "Whether a procedure step is genuinely a single action."
+    recognition:
+      probe: "What concepts do you associate with 'ASD-STE100'?"
+      expect: [controlled language, approved dictionary, procedures versus descriptions, sentence length limits, aerospace maintenance]
+      verified: []
+
+  - id: rfc2119
+    name: RFC 2119 requirement keywords
+    steward: IETF
+    url: https://www.rfc-editor.org/rfc/rfc2119
+    license: IETF-trust
+    redistributable: true
+    applies_to: [specifications, design-docs, protocol-docs]
+    invoke_as: >-
+      Use RFC 2119 keywords for every normative statement. Write MUST, MUST NOT,
+      SHOULD, SHOULD NOT, and MAY in uppercase. Do not use them for anything that is
+      not a requirement.
+    rationale: >-
+      Uppercase marks obligation and removes the ambiguity of ordinary "should".
+    verifier:
+      coverage: full
+      rules: [AgenticWriting.RFC2119-Keywords]
+      not_checkable: []
+    recognition:
+      probe: "What concepts do you associate with 'RFC 2119'?"
+      expect: [MUST, SHOULD, MAY, normative requirement levels, interoperability]
+      verified: []
+
+  - id: ears
+    name: EARS (Easy Approach to Requirements Syntax)
+    steward: Alistair Mavin
+    url: https://alistairmavin.com/ears/
+    license: published-papers
+    redistributable: false
+    applies_to: [requirements, acceptance-criteria, issue-descriptions]
+    invoke_as: >-
+      Write each requirement in EARS syntax: ubiquitous, WHEN a trigger, IF an
+      unwanted condition THEN, WHILE a state, or WHERE a feature is included.
+    rationale: >-
+      Five templates cover almost every requirement, and each one is testable by
+      construction because trigger, state, and response are separate slots.
+    verifier:
+      coverage: partial
+      rules: [AgenticWriting.EARS-Shall]
+      not_checkable:
+        - "Whether the chosen template matches the real requirement class."
+        - "Whether the response is observable."
+    recognition:
+      probe: "What concepts do you associate with 'EARS requirements syntax'?"
+      expect: [ubiquitous, event-driven, state-driven, unwanted behaviour, optional feature, shall]
+      verified: []
+
+  - id: diataxis
+    name: Diátaxis documentation framework
+    steward: Daniele Procida
+    url: https://diataxis.fr/
+    license: public-framework
+    redistributable: false
+    applies_to: [documentation-sets]
+    invoke_as: >-
+      Classify this page under Diátaxis as tutorial, how-to guide, reference, or
+      explanation, and keep it to that one mode.
+    rationale: >-
+      Most bad documentation mixes two modes on one page. Naming the mode first
+      removes the most common structural defect.
+    verifier:
+      coverage: none
+      rules: []
+      not_checkable:
+        - "Mode purity is a judgement about intent, not a pattern in the text."
+    recognition:
+      probe: "What concepts do you associate with 'Diátaxis'?"
+      expect: [tutorial, how-to guide, reference, explanation, acquisition versus application]
+      verified: []
+
+  - id: adr-nygard
+    name: Architecture Decision Record (Nygard format)
+    steward: Michael Nygard
+    url: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions.html
+    license: public-post
+    redistributable: false
+    applies_to: [decisions]
+    invoke_as: >-
+      Record this decision as an ADR in Nygard format: Title, Status, Context,
+      Decision, Consequences. Supersede; never delete.
+    rationale: >-
+      Fixed slots force the author to state the forces and the cost, not only the choice.
+    verifier:
+      coverage: partial
+      rules: [AgenticWriting.ADR-Sections]
+      not_checkable:
+        - "Whether Consequences states the real negative consequence."
+    recognition:
+      probe: "What concepts do you associate with 'ADR according to Nygard'?"
+      expect: [context, decision, consequences, status, superseded, immutable]
+      verified: []
+
+  - id: arc42
+    name: arc42 architecture documentation template
+    steward: Gernot Starke, Peter Hruschka
+    url: https://arc42.org/
+    license: free-to-use
+    redistributable: false
+    applies_to: [design-docs]
+    invoke_as: >-
+      Structure this design document on arc42: goals, constraints, context and scope,
+      solution strategy, building blocks, runtime view, deployment view, crosscutting
+      concepts, decisions, quality requirements, risks, glossary. Omit an empty section.
+    rationale: >-
+      A stable section order makes review cheap, because a reviewer knows where to look.
+    verifier:
+      coverage: none
+      rules: []
+      not_checkable:
+        - "Section presence is checkable per project; section quality is not."
+    recognition:
+      probe: "What concepts do you associate with 'arc42'?"
+      expect: [12 sections, building block view, runtime view, crosscutting concepts, quality requirements]
+      verified: []
+
+  - id: conventional-commits
+    name: Conventional Commits 1.0.0
+    steward: community
+    url: https://www.conventionalcommits.org/en/v1.0.0/
+    license: CC-BY-3.0
+    redistributable: true
+    applies_to: [commit-messages, pr-titles]
+    invoke_as: >-
+      Write the commit subject as Conventional Commits 1.0.0:
+      type(optional scope)!: description.
+    rationale: >-
+      Machine-readable intent. A release tool can derive the version bump from it.
+    verifier:
+      coverage: full
+      rules: []
+      note: "Checked by commitlint in CI, not by Vale. Vale does not read commit messages."
+      not_checkable: []
+    recognition:
+      probe: "What concepts do you associate with 'Conventional Commits'?"
+      expect: [feat, fix, BREAKING CHANGE, semver bump, scope]
+      verified: []
+
+  - id: bluf
+    name: BLUF (Bottom Line Up Front)
+    steward: US Department of Defense writing practice
+    url: https://en.wikipedia.org/wiki/BLUF_(communication)
+    license: public-practice
+    redistributable: true
+    applies_to: [status-updates, incident-reports, email, pr-descriptions]
+    invoke_as: >-
+      Put the conclusion and the requested action in the first sentence. Put the
+      supporting detail after it.
+    rationale: >-
+      The reader may stop after one sentence. Make that sentence sufficient.
+    verifier:
+      coverage: none
+      rules: []
+      not_checkable:
+        - "Whether the first sentence is the actual bottom line."
+    recognition:
+      probe: "What concepts do you associate with 'BLUF'?"
+      expect: [conclusion first, military writing, executive summary, action required]
+      verified: []

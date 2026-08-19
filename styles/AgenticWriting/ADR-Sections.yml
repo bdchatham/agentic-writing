@@ -1,0 +1,10 @@
+# ADR (Nygard): an ADR has Status, Context, Decision, and Consequences.
+# Vale checks presence, not quality. Scope this to docs/adr/**.md in .vale.ini.
+extends: conditional
+message: "ADR is missing a '%s' section."
+level: error
+scope: raw
+ignorecase: true
+first: '(?s)^.*$'
+second: '## (?:Status|Context|Decision|Consequences)'
+exceptions: []

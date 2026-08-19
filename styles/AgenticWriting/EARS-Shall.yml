@@ -1,0 +1,9 @@
+# EARS: a 'shall' statement needs an EARS trigger, state, or condition slot,
+# unless it is a ubiquitous requirement. This rule flags a bare 'shall'
+# sentence so the author confirms the template on purpose.
+extends: existence
+message: "'%s' statement: confirm the EARS template (WHEN / IF..THEN / WHILE / WHERE / ubiquitous)."
+level: suggestion
+scope: sentence
+tokens:
+  - '\bshall\b'

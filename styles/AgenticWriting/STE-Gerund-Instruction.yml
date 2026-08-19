@@ -1,0 +1,8 @@
+# ASD-STE100: start an instruction with the imperative verb, not with an -ing form.
+# Scoped to list items, because that is where procedures live in Markdown.
+extends: existence
+message: "Instruction starts with '-ing' form: '%s'. Use the imperative."
+level: error
+scope: list
+tokens:
+  - '^\s*[A-Za-z]+ing\b'

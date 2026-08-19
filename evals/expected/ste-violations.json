@@ -1,0 +1,16 @@
+{
+  "fixture": "evals/fixtures/ste-violations.md",
+  "note": "Minimum expected findings. Regenerate with: vale --output=JSON evals/fixtures/ste-violations.md",
+  "must_include_rules": [
+    "AgenticWriting.STE-SentenceLength-Description",
+    "AgenticWriting.STE-Passive",
+    "AgenticWriting.STE-Contractions",
+    "AgenticWriting.STE-ApprovedWords",
+    "AgenticWriting.STE-Gerund-Instruction",
+    "AgenticWriting.STE-PhrasalVerbs",
+    "AgenticWriting.STE-NounCluster",
+    "AgenticWriting.EARS-Shall",
+    "AgenticWriting.RFC2119-Keywords"
+  ],
+  "min_findings": 12
+}

@@ -1,0 +1,74 @@
+name: writing-contract
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-prose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint prose against the writing contract
+        uses: vale-cli/vale-action@reviewdog
+        with:
+          reporter: github-pr-review
+          fail_level: error
+          files: '["README.md", "docs", "anchors"]'
+
+  rule-regression:
+    # A rule that stops firing is a silent failure. Fixtures catch it.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vale
+        run: |
+          VALE_VERSION=3.14.0
+          curl -sfL "https://github.com/vale-cli/vale/releases/download/v${VALE_VERSION}/vale_${VALE_VERSION}_Linux_64-bit.tar.gz" \
+            | tar -xz -C /usr/local/bin vale
+          vale --version
+
+      - name: Confirm the styles load
+        run: vale ls-config
+
+      - name: Run fixture expectations
+        run: ./evals/run.sh
+
+  registry-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml
+
+      - name: Every registry rule reference resolves to a rule file
+        run: |
+          python3 - <<'PY'
+          import pathlib, sys, yaml
+          reg = yaml.safe_load(open('anchors/registry.yaml'))
+          have = {p.stem for p in pathlib.Path('styles/AgenticWriting').glob('*.yml')}
+          bad = []
+          for a in reg['anchors']:
+              for r in (a['verifier'].get('rules') or []):
+                  stem = r.split('.', 1)[1]
+                  if stem not in have:
+                      bad.append((a['id'], r))
+          for anchor, rule in bad:
+              print(f"dangling reference: {anchor} -> {rule}")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Generated files are in sync with the registry
+        run: |
+          python3 scripts/render-context.py --target agents > /tmp/AGENTS.md
+          diff -q /tmp/AGENTS.md AGENTS.md || {
+            echo "AGENTS.md is stale. Run scripts/render-context.py."; exit 1; }

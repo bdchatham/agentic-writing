@@ -1,0 +1,11 @@
+# ASD-STE100: do not write a noun cluster of more than three words.
+# This is a heuristic: it matches four or more consecutive capitalized or
+# lower-case nouns without a preposition or article between them. Expect false
+# positives on product names; add those to styles/Vocab/AgenticWriting/accept.txt.
+extends: existence
+message: "Possible noun cluster of more than three words: '%s'. Break it with 'of' or 'for'."
+level: suggestion
+nonword: false
+scope: sentence
+tokens:
+  - '(?:\b[a-z]+(?:ion|ment|ity|ness|ance|ence|er|or|log|data|node|key|token|proxy)\b[ ]){3,}[a-z]+'
