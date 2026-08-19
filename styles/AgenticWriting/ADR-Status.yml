@@ -1,0 +1,17 @@
+# ADR (Nygard): an ADR records Title, Status, Context, Decision, Consequences.
+# This rule checks that the 'Status' section is present. Vale checks presence
+# only; the quality of the section is in the not_checkable list for adr-nygard
+# in anchors/registry.yaml.
+#
+# One rule per section, because an occurrence check carries one token and one
+# message. 'conditional' cannot express this: it asks whether one pattern
+# implies another, not whether a required section exists.
+#
+# Scoped to docs/adr in .vale.ini. Without that scope it fires on every file.
+extends: occurrence
+message: "ADR is missing a '## Status' section."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^#+ +Status\b'

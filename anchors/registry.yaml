@@ -141,7 +141,11 @@ anchors:
       Fixed slots force the author to state the forces and the cost, not only the choice.
     verifier:
       coverage: partial
-      rules: [AgenticWriting.ADR-Sections]
+      rules:
+        - AgenticWriting.ADR-Status
+        - AgenticWriting.ADR-Context
+        - AgenticWriting.ADR-Decision
+        - AgenticWriting.ADR-Consequences
       not_checkable:
         - "Whether Consequences states the real negative consequence."
     recognition:
