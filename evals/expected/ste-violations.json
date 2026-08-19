@@ -1,6 +1,6 @@
 {
   "fixture": "evals/fixtures/ste-violations.md",
-  "note": "Minimum expected findings. Regenerate with: vale --output=JSON evals/fixtures/ste-violations.md",
+  "note": "Minimum expected findings. Regenerate with: vale --output=JSON evals/fixtures/ste-violations.md RFC 2119 moved to evals/fixtures/specs/: the rule is scoped to specifications, so it cannot fire on this file.",
   "must_include_rules": [
     "AgenticWriting.STE-SentenceLength-Description",
     "AgenticWriting.STE-Passive",
@@ -9,8 +9,7 @@
     "AgenticWriting.STE-Gerund-Instruction",
     "AgenticWriting.STE-PhrasalVerbs",
     "AgenticWriting.STE-NounCluster",
-    "AgenticWriting.EARS-Shall",
-    "AgenticWriting.RFC2119-Keywords"
+    "AgenticWriting.EARS-Shall"
   ],
   "min_findings": 12
 }

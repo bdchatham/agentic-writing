@@ -8,7 +8,14 @@ command -v vale >/dev/null || { echo "vale not on PATH: https://vale.sh/docs"; e
 command -v jq   >/dev/null || { echo "jq not on PATH"; exit 2; }
 
 fail=0
-for fixture in evals/fixtures/*.md; do
+
+# Fixtures nest: a rule scoped to a path in .vale.ini needs a fixture on that
+# path. evals/fixtures/specs/ is one, because RFC 2119 is specification-scoped.
+fixtures=()
+while IFS= read -r f; do fixtures+=("$f"); done \
+  < <(find evals/fixtures -type f -name '*.md' | sort)
+
+for fixture in "${fixtures[@]}"; do
   base="$(basename "${fixture%.md}")"
   expected="evals/expected/${base}.json"
   [ -f "$expected" ] || { echo "no expectation for ${fixture}"; fail=1; continue; }
