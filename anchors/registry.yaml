@@ -53,6 +53,13 @@ anchors:
         - "One approved meaning per word in context (needs word-sense judgement)."
         - "Correct choice of Technical Name versus Technical Verb."
         - "Whether a procedure step is genuinely a single action."
+        - "A noun cluster that contains an adjective, such as 'cluster autoscaler
+          group minimum size constraint value'. STE-NounCluster counts a run of four
+          tagged nouns, so an adjective inside the cluster hides it."
+        - "Noun-cluster detection in dense technical text is approximate. The
+          part-of-speech tagger misses some clusters and tags a verb such as 'fails'
+          as a noun, so STE-NounCluster reports a false positive as well as a false
+          negative. It stays at suggestion level for that reason."
     recognition:
       probe: "What concepts do you associate with 'ASD-STE100'?"
       expect: [controlled language, approved dictionary, procedures versus descriptions, sentence length limits, aerospace maintenance]

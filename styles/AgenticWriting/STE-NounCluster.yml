@@ -5,6 +5,14 @@
 # and never matched anything, including the clusters in the fixture.
 # A product name that is genuinely one noun belongs in
 # styles/config/vocabularies/AgenticWriting/accept.txt.
+#
+# Known error modes, measured on this repository's fixtures. Both are recorded
+# in the not_checkable list for asd-ste100 in anchors/registry.yaml:
+#   - An adjective inside the cluster hides it. 'cluster autoscaler group
+#     minimum size constraint value' does not match.
+#   - The tagger reads a verb that looks plural as a noun, so
+#     'strategy selection logic fails' is reported.
+# The rule stays at suggestion level because of both.
 extends: sequence
 message: "Noun cluster of more than three nouns: '%[1]s %[2]s %[3]s %[4]s'. Break it with 'of' or 'for'."
 level: suggestion
