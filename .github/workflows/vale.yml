@@ -35,6 +35,11 @@ jobs:
             | tar -xz -C /usr/local/bin vale
           vale --version
 
+      # .vale.ini declares Packages, and those are not committed. Without this
+      # step every rule fails to load and the failure reads as a broken fixture.
+      - name: Fetch the third-party style packages
+        run: vale sync
+
       - name: Confirm the styles load
         run: vale ls-config
 
