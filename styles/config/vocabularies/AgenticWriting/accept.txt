@@ -13,3 +13,8 @@ ConfigMap
 reconcile
 reconciler
 idempotent
+[Ee]val
+[Ee]vals
+[Ee]xplainability
+[Rr]edistributable
+wordset
