@@ -63,7 +63,7 @@ inside the sub-domain it implements. The path is the relationship.
 | `spec.md` | EARS · RFC 2119 · Connextra · INVEST · Gherkin · DDD ubiquitous language | boundary commitments |
 | `plan.md` | arc42 · Clean Architecture · ADR (Nygard) | revalidation triggers |
 | `tasks.md` | TDD · Property-Based Testing · ISO/IEC/IEEE 29148 traceability | the task annotations |
-| implementation | Effective Go · Go Code Review Comments · Google Go Style Guide · Clean Code · Code Smells | `/brandon-code` step structure |
+| implementation | Effective Go · Go Code Review Comments · Google Go Style Guide · Code Smells | the step-structure rule, stated in the contract |
 
 Effective Go carries one documented gap: it predates modules and generics, so it says
 nothing about either.

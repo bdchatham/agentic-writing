@@ -20,7 +20,7 @@ jobs:
         with:
           reporter: github-pr-review
           fail_level: error
-          files: '["README.md", "docs", "anchors", "specs"]'
+          files: '["README.md", "docs", "anchors", "specs", ".specify/memory"]'
 
   rule-regression:
     # A rule that stops firing is a silent failure. Fixtures catch it.
@@ -58,6 +58,9 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pyyaml
+
+      - name: No artifact cites a private skill or agent as an authority
+        run: ./scripts/check-no-private-citations.sh
 
       - name: Every registry rule reference resolves to a rule file
         run: |

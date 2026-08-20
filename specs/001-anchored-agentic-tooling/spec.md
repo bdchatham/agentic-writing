@@ -300,6 +300,8 @@ evidence that a standard is being restated.
 
 ## Migration
 
+<!-- cites-private: the migration map names V1 skills because naming them is its job -->
+
 V1 has 16 core skills. Eight are built on organisation-specific profiles and cannot move
 to a public repository under FR-018 and FR-019.
 
@@ -311,6 +313,26 @@ to a public repository under FR-018 and FR-019.
 
 Deletion is the point, not a cost. A skill that encodes rigor a public standard already
 carries is the custom pattern this iteration exists to remove.
+
+### FR-016 applied to this iteration's own work
+
+The first artifacts built for V2 were two skills, written before this spec existed.
+Checked against FR-016 afterwards:
+
+- `/linear-ticket` passes. It creates issues in a tracker, a real external side effect.
+- `/spec-kit` fails. It writes files inside the repository and has no side effect
+  outside it, so its content is knowledge. It is dissolved into the contract and
+  deleted.
+
+Four further carry-overs came from V1 by habit rather than by decision: a guardrails
+stanza and `SKILL.md` anatomy taken from V1's template, `references/` directories
+holding 280 lines of corpus, V1's category taxonomy, and a citation of a private skill
+as an authority in a public document.
+
+None was copied deliberately. V1 was present while V2 was being written, and a strong
+prior fires without announcing itself — the same silent substitution the anchor research
+documents, applied to conventions instead of concepts. The private-citation gate exists
+because of the fourth one.
 
 ## Assumptions
 
