@@ -2,5 +2,8 @@
 styles/write-good/
 styles/proselint/
 
+# Spec Kit per-run state
+.specify/state/
+
 # macOS
 .DS_Store
