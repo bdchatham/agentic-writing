@@ -16,7 +16,10 @@ while IFS= read -r f; do fixtures+=("$f"); done \
   < <(find evals/fixtures -type f -name '*.md' | sort)
 
 for fixture in "${fixtures[@]}"; do
-  base="$(basename "${fixture%.md}")"
+  # Mirror the fixture's path under evals/expected, so two fixtures in different
+  # mode directories can share a name without silently sharing an expectation.
+  rel="${fixture#evals/fixtures/}"
+  base="${rel%.md}"
   expected="evals/expected/${base}.json"
   [ -f "$expected" ] || { echo "no expectation for ${fixture}"; fail=1; continue; }
 
@@ -31,6 +34,16 @@ for fixture in "${fixtures[@]}"; do
       fail=1
     fi
   done < <(jq -r '.must_include_rules[]' "$expected")
+
+  # A presence rule that fires on a complete document is worse than no rule.
+  # A fixture may name the rules that must stay silent on it.
+  while read -r unwanted; do
+    [ -z "$unwanted" ] && continue
+    if echo "$rules" | grep -qx "$unwanted"; then
+      echo "FIRED ${base}: rule ${unwanted} fired but must stay silent"
+      fail=1
+    fi
+  done < <(jq -r '.must_not_include_rules // [] | .[]' "$expected")
 
   min="$(jq -r '.min_findings' "$expected")"
   if [ "$count" -lt "$min" ]; then

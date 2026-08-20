@@ -20,7 +20,7 @@ jobs:
         with:
           reporter: github-pr-review
           fail_level: error
-          files: '["README.md", "docs", "anchors"]'
+          files: '["README.md", "docs", "anchors", "specs"]'
 
   rule-regression:
     # A rule that stops firing is a silent failure. Fixtures catch it.

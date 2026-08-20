@@ -1,0 +1,10 @@
+# arc42: constraints and scope are named sections. Section presence is checkable; quality is not.
+# Presence only. Vale cannot judge whether the section says anything.
+# Scoped in .vale.ini; without that scope this fires on every file.
+extends: occurrence
+message: "Design is missing '## Non-goals'. A scope with no stated boundary grows while the document is open."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^## +Non-goals\b'

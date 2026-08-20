@@ -1,0 +1,10 @@
+# arc42: risks and technical debt are a named section.
+# Presence only. Vale cannot judge whether the section says anything.
+# Scoped in .vale.ini; without that scope this fires on every file.
+extends: occurrence
+message: "Design is missing '## Open questions'. An unstated unknown reads as a settled decision."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^## +Open questions\b'

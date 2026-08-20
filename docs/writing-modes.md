@@ -1,0 +1,76 @@
+# Writing modes
+
+Three document types carry a structure contract, not just a prose contract. Each
+one has a path, a set of required sections, and one command that checks it.
+
+Ordinary prose — a README, a comment, a reply — gets the prose rules only. A
+missing `## Trade-offs` is a defect in a design document and meaningless in a
+README, so a structure rule turns on for one mode and stays off everywhere else.
+
+## The three modes
+
+| Mode | Path | Command |
+|---|---|---|
+| Spec | `specs/**/*.md` | `vale specs/<NNN>-<slug>/` |
+| Ticket | `tickets/**/*.md` | `vale tickets/<id>.md` |
+| Design | `docs/design/**`, `designs/**` | `vale designs/<arc>/<doc>.md` |
+
+### Spec
+
+| Required | Rule | Why |
+|---|---|---|
+| `## Anchors` | `Spec-Anchors` | Methods named once. Without the block, the body restates them. |
+| `## Success Criteria` | `Spec-SuccessCriteria` | A spec with no measurable outcome cannot be closed. |
+| `**Independent Test**` | `Spec-IndependentTest` | A story without one becomes a ticket whose implementer invents the bar. |
+
+RFC 2119 keywords are an error in this mode. A lowercase `must` in a
+specification carries no obligation.
+
+### Ticket
+
+Seven sections, all mandatory: `Problem`, `Impact`, `Relevant experts`,
+`Proposed approach`, `Acceptance criteria`, `Out of scope`, `References`.
+An empty one says `None.`, so a reader can tell an empty section from a
+forgotten one.
+
+A ticket body is not a file in this repository. `/linear-ticket` stages the
+rendered body under `tickets/` and lints it before it files anything. That is how
+an agent validates its own output rather than asserting the output is fine.
+
+### Design
+
+Four sections, chosen because they are the ones that go missing when a document
+is rushed: `Non-goals`, `Alternatives`, `Trade-offs`, `Open questions`.
+
+`Background`, `Goals`, `Design` and `References` are not checked. They are
+present in every document that was written at all, so a rule for them costs
+noise and catches nothing.
+
+## What the modes do not check
+
+A structure rule reports a missing heading. It cannot report an empty section, a
+section that says nothing, or a section in the wrong order. Those limits are
+recorded per anchor in `anchors/registry.yaml` under `not_checkable`.
+
+Two more gaps worth naming:
+
+- A spec's per-story pairing is unchecked. The gate confirms that
+  `**Independent Test**` appears at least once. It cannot confirm that every
+  user story has one, because a Vale rule cannot compare two token counts.
+- A section present but stated as `None.` passes. That is deliberate: `None.` is
+  a real answer, and distinguishing it from evasion is judgement.
+
+## Adding a mode
+
+1. Write one rule per required section. An `occurrence` check carries one token
+   and one message, so a section cannot share a rule.
+2. Set every new rule to `NO` under `[*.md]`, then to `YES` in the mode's own
+   section. Vale scopes a rule's on and off state per path, but applies a
+   **level** globally, so toggle rather than restate the level.
+3. Add two fixtures: one incomplete document that fires the rules, one complete
+   document that fires none. The second matters more — a presence rule that
+   fires on a complete document is worse than no rule.
+4. Name the silent rules in `must_not_include_rules` in the expectation file.
+5. The mode's glob must also cover the fixture path. A Vale section glob is
+   anchored at the repository root, so `tickets/**/*.md` does not match
+   `evals/fixtures/tickets/`. Name both paths in one brace pattern.

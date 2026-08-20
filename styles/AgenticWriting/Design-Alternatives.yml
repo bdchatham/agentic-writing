@@ -1,0 +1,10 @@
+# ADR (Nygard): the forces considered are part of the record.
+# Presence only. Vale cannot judge whether the section says anything.
+# Scoped in .vale.ini; without that scope this fires on every file.
+extends: occurrence
+message: "Design is missing '## Alternatives'. A decision with no rejected option is a preference."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^## +Alternatives\b'

@@ -1,8 +1,0 @@
-{
-  "fixture": "evals/fixtures/specs/rfc2119-violations.md",
-  "note": "Lives under a specs path because RFC 2119 is scoped to specifications in .vale.ini, per applies_to for the rfc2119 anchor in anchors/registry.yaml. Regenerate with: vale --output=JSON evals/fixtures/specs/rfc2119-violations.md",
-  "must_include_rules": [
-    "AgenticWriting.RFC2119-Keywords"
-  ],
-  "min_findings": 5
-}

@@ -1,0 +1,10 @@
+# House ticket format: seven mandatory sections. No open standard defines them, so they are stated.
+# Presence only. Vale cannot judge whether the section says anything.
+# Scoped in .vale.ini; without that scope this fires on every file.
+extends: occurrence
+message: "Ticket is missing the '## Proposed approach' section. Write 'None.' rather than dropping a heading."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^## +Proposed approach\b'

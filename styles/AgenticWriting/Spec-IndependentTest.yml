@@ -1,0 +1,10 @@
+# GitHub Spec Kit spec-template.md: each user story states how it is tested independently.
+# Presence only. Vale cannot judge whether the section says anything.
+# Scoped in .vale.ini; without that scope this fires on every file.
+extends: occurrence
+message: "Spec has no '**Independent Test**'. A user story without one becomes a ticket whose acceptance bar its implementer invents."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '\*\*Independent Test\*\*'

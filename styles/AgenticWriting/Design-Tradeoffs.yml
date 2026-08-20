@@ -1,0 +1,10 @@
+# ADR (Nygard): Consequences states the cost, including the negative one.
+# Presence only. Vale cannot judge whether the section says anything.
+# Scoped in .vale.ini; without that scope this fires on every file.
+extends: occurrence
+message: "Design is missing '## Trade-offs'. State the cost of the choice, not only the choice."
+level: error
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^## +Trade-?offs\b'

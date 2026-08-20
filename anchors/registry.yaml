@@ -184,6 +184,8 @@ anchors:
         - AgenticWriting.ADR-Context
         - AgenticWriting.ADR-Decision
         - AgenticWriting.ADR-Consequences
+        - AgenticWriting.Design-Alternatives
+        - AgenticWriting.Design-Tradeoffs
       not_checkable:
         - "Whether Consequences states the real negative consequence."
     recognition:
@@ -205,10 +207,15 @@ anchors:
     rationale: >-
       A stable section order makes review cheap, because a reviewer knows where to look.
     verifier:
-      coverage: none
-      rules: []
+      coverage: partial
+      rules:
+        - AgenticWriting.Design-NonGoals
+        - AgenticWriting.Design-OpenQuestions
       not_checkable:
-        - "Section presence is checkable per project; section quality is not."
+        - "Section quality. Presence is checked for the design writing mode; whether
+          a section says anything is judgement."
+        - "Whether a missing section was omitted because it is empty, which arc42
+          permits, or because the author forgot it."
     recognition:
       probe: "What concepts do you associate with 'arc42'?"
       expect: [12 sections, building block view, runtime view, crosscutting concepts, quality requirements]
