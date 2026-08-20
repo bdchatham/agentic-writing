@@ -1,5 +1,12 @@
 # ASD-STE100: start an instruction with the imperative verb, not with an -ing form.
 #
+# Scoped to procedures in .vale.ini. The rule governs a procedure step. A
+# descriptive bullet is not a step, and 'Replacing X' in a Non-goals list is
+# correct English. Measured on four documents in this repository before the
+# scoping: every hit outside a procedure was a false positive, and the design
+# writing mode requires a Non-goals section, so a global rule made two rules
+# here contradict each other by construction.
+#
 # The rule reads raw text and anchors to the Markdown list marker, because a
 # step is a list item. 'scope: list' was tried and rejected: Vale binds '^' to
 # the start of every LINE inside the item, so a wrapped bullet whose

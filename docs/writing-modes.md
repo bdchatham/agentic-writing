@@ -46,6 +46,24 @@ is rushed: `Non-goals`, `Alternatives`, `Trade-offs`, `Open questions`.
 present in every document that was written at all, so a rule for them costs
 noise and catches nothing.
 
+## A fourth scope: procedures
+
+`docs/procedures/**` is not a structure mode. It carries no required sections. It
+changes which **prose** rules apply, because two ASD-STE100 rules govern a
+procedure and not description:
+
+| Rule | In a procedure | Elsewhere |
+|---|---|---|
+| `STE-SentenceLength-Procedure` | 20 words | off — the 25-word rule applies |
+| `STE-Gerund-Instruction` | a step starts with the imperative | off |
+
+The gerund rule was global until it fired on four documents in a row, every
+time on a descriptive list. The design mode requires a `## Non-goals` section,
+and a Non-goals list is naturally written as `Replacing X`, so a global rule put
+two rules here in direct contradiction. Its coverage now lives in
+`evals/fixtures/procedures/`, and `evals/fixtures/ste-violations.md` keeps a
+gerund-led list item as the negative control: the rule must stay silent there.
+
 ## What the modes do not check
 
 A structure rule reports a missing heading. It cannot report an empty section, a
