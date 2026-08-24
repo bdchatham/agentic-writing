@@ -197,10 +197,11 @@ failure mode is quiet.
 
 ## Open questions
 
-1. Which of the four failures is machine-checkable, and in which tool. Research is
-   in flight on Vale's `conditional` rule type and on whether ISO/IEC/IEEE 29148
-   defines verifiability in a way a linter can approximate. Spec A cannot start
-   without it.
+1. ~~Which of the four failures is machine-checkable, and in which tool.~~
+   **Settled by ADR 0002.** Vale validates prose and enforces the template. It
+   checks nothing that needs an open set, so none of the four failures gets a
+   Vale rule. ISO/IEC/IEEE 29148:2018 clause 5.2.7 is the one lintable clause
+   with authority behind it, and it is a prose rule. Spec A can start.
 2. Whether `YAGNI` and `KISS` stay in the doctrine. The catalogue rates YAGNI at
    its lowest confidence tier, and KISS is absent from the catalogue entirely
    under any spelling. Both currently cost words in Lane 3.
