@@ -87,12 +87,12 @@ Negative:
 
 ## Glossary
 
-Terms a reader needs and did not get from us. House vocabulary does not belong here,
-because a term this team invented gets replaced with plain words where it is used.
+Terms a reader needs and did not get from us. House vocabulary does not belong here.
+Write a term this team invented as plain words at the point of use instead.
 
 **open set.** This document's term for a collection whose members stay unknown until
-someone writes the document, such as the requirement IDs a spec happens to declare. A
-closed set is fixed when the rule is written, such as the headings a template requires.
+someone writes the document. The requirement IDs a spec happens to declare are one. A
+closed set holds still while someone writes the rule, and a template's headings are one.
 
 **existence, occurrence, conditional.** Vale rule types. The first two match patterns
 inside one scope. `conditional` is the only one that relates two patterns, and it is the
@@ -121,7 +121,7 @@ requirement, which fix clause order and make a shape check possible.
 measured precision and for the scope its authors chose to keep.
 
 **ISO/IEC/IEEE 29148.** The requirements engineering standard. Clause 5.2.7 carries a
-normative list of unbounded and ambiguous terms, which makes it the one clause here that a
+normative list of unbounded and ambiguous terms. That makes it the one clause here a
 linter can enforce and cite.
 
 ## Alternatives considered
