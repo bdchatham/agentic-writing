@@ -102,45 +102,6 @@ Negative:
 - Order rules are newly permitted and none exist yet. Someone will write one badly before
   someone writes one well.
 
-## Glossary
-
-Terms a reader needs and did not get from us. House vocabulary does not belong here.
-Write a term this team invented as plain words at the point of use instead.
-
-**open set.** This document's term for a collection whose members stay unknown until
-someone writes the document. The requirement IDs a spec happens to declare are one. A
-closed set holds still while someone writes the rule, and a template's headings are one.
-
-**existence, occurrence, conditional.** Vale rule types. The first two match patterns
-inside one scope. `conditional` is the only one that relates two patterns, and it is the
-one every relational rule needed.
-
-**scope.** Which slice of a document a Vale rule reads. `scope: text` reads rendered prose
-block by block. `scope: raw` reads the whole file including fenced code blocks, and it
-ignores the inline suppression comment.
-
-**regexp2.** The regular expression engine Vale uses. It supports lookarounds, which RE2
-does not, and it backtracks, which RE2 does not. The backtracking is what crashes an
-unbounded pattern.
-
-**Tengo.** The scripting language behind Vale's `script` rule type. It is the only way to
-express a check that has to accumulate state, and it runs with no test harness and no
-debugger.
-
-**anchor.** A public term a model already holds, named in a prompt so the concept arrives
-without spending words defining it. ADR 0001 pairs each one with a linter rule and records
-how much of the standard that rule covers.
-
-**EARS.** Easy Approach to Requirements Syntax. Five sentence templates for writing a
-requirement, which fix clause order and make a shape check possible.
-
-**AQUSA.** A research tool that lints user stories for quality defects. Cited here for its
-measured precision and for the scope its authors chose to keep.
-
-**ISO/IEC/IEEE 29148.** The requirements engineering standard. Clause 5.2.7 carries a
-normative list of unbounded and ambiguous terms. That makes it the one clause here a
-linter can enforce and cite.
-
 ## Alternatives considered
 
 **Put the boundary at arity: one location for Vale, two for a test.** Rejected on
