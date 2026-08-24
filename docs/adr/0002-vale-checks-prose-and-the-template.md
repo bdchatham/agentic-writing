@@ -7,43 +7,60 @@ bound the linter's side of it.
 
 ## Context
 
-One full specification cycle produced four failures that no gate caught. Two of them are
-relational: a requirement ID referenced but never declared, and a requirement declared but
-never verified. Both look linter-shaped, so the obvious next step was to write Vale rules
-for them.
+ADR 0001 paired each semantic anchor with a Vale rule and recorded how much of the standard
+that rule covers. What it never settled is where the linter's responsibility ends, and a
+specification cycle in sei-load ran into that edge in August 2026.
 
-Research settled that they are writable, and that writing them is a mistake.
+That cycle carried a contract registry from a 23-requirement specification through to a
+reviewed pull request, and it produced four failures that every gate passed. Two of the four
+are relational, meaning a rule that caught them would have to compare one part of the
+document against another. In the first, a verification table cited a requirement ID the
+document never declared anywhere. In the second, a requirement declared its ID and then never
+appeared in verification at all. Both failures look like linter work, so writing the two
+rules was the obvious next step.
 
-A rule that relates declared IDs to referenced IDs needs `conditional`, whose `first`
-pattern compares its full match against `second`'s capture group. It needs `scope: raw`,
-because under `scope: text` the same rule stops firing at all — three fixtures that catch a
-real missing-verification defect under `raw` go silent under `text`. Under `raw` it then
-reads inside fenced code blocks, so it flags a sample log holding `REQ-404`. The inline
-`<!-- vale Rule = NO -->` toggle does not suppress a `raw` rule either. Uniqueness needs a
-Tengo script, which is a program inside YAML with no tests and no debugger.
+Both rules turned out to be writable, and writing either one is a mistake. The reason lives
+in the mechanics rather than in taste.
 
-A rule that checks a FROZEN section names an approver fails differently. The correct form
-sweeps an arbitrary section body, and Vale uses `regexp2`, which backtracks: the pattern
-crashes with `maximum backtracking stack size exceeded` at roughly 400 lines in one
-section. The form that ships is a bounded window that passes an approver from an unrelated
-section.
+A rule relating declared IDs to referenced IDs has to use `conditional`, the one Vale rule
+type that compares two patterns, and `conditional` compares `first`'s full match against
+`second`'s capture group rather than against `second`'s full match. That rule also has to run
+under `scope: raw`, and the choice of scope is not cosmetic. Three fixtures that catch a real
+missing-verification defect under `raw` go silent under `text`, and a rule that always passes
+is worse than no rule, because it gets trusted.
 
-A first attempt put the boundary at arity: one location for Vale, two or more for a test.
-**That boundary is wrong, and a test showed why.** A rule requiring `## Problem` before
-`## Impact` relates two locations, and Vale enforces it with a variable-length lookbehind.
-It ran over a 2,523-line document in 130 ms and did not crash. The pattern anchors to two
-known literals rather than scanning an unbounded body.
+Running under `raw` then carries its own cost, because `raw` reads the whole file including
+fenced code blocks, so the rule flags a sample log that happens to contain `REQ-404`. The
+usual escape hatch fails as well, since the inline `<!-- vale Rule = NO -->` comment has no
+effect on a raw rule, which leaves editing the rule file as the only way out. Checking that
+IDs are unique needs a Tengo script instead, and that puts a program inside a YAML file with
+no test harness and no debugger.
 
-The literature reaches the same narrow scope from another direction. The one rigorous EARS
-checker reports that it cannot detect semantic mismatches. A lexical rule caught three of
-four requirements that a shape rule passed. AQUSA reached 72.2% precision overall and
-42.3% on well-formedness, and its authors held the tool to "the clerical part of RE".
+The FROZEN rule fails for a different reason, and the difference matters because open sets
+have nothing to do with it. A correct version has to sweep an arbitrary section body looking
+for an approver, and Vale runs on `regexp2`, which backtracks where RE2 would refuse. That
+sweep crashes with `maximum backtracking stack size exceeded` once a section reaches roughly
+400 lines. The version that survives uses a bounded window, and it passes an approver sitting
+in an unrelated section.
+
+My first attempt at this boundary used arity, one location for Vale and two or more for a
+test. A fixture disproved it in about a minute, and the disproof is worth keeping because the
+boundary sounded right. A rule requiring `## Problem` to appear before `## Impact` relates two
+locations, which arity would forbid, and Vale enforces it correctly using a variable-length
+lookbehind. That rule ran over a 2,523-line document in 130 ms without crashing, because its
+pattern anchors to two known literals instead of sweeping an unbounded body. Arity would
+therefore have banned a rule the template genuinely wants.
+
+The research literature arrives at the same narrow scope from a different direction. RETA, the
+one rigorous EARS checker, reports that its approach cannot detect semantic mismatches, and
+AQUSA reached 72.2% precision overall against 42.3% on well-formedness before its authors
+deliberately held the tool to what they called the clerical part of requirements engineering.
 
 ## Decision
 
-Vale validates prose and enforces the template. It checks nothing that needs an open set.
-
-The discriminator is one question. Can the rule state the thing it looks for?
+Vale validates prose and enforces the template, and it checks nothing that needs an open
+set. The discriminator behind that split is a single question. Can the rule state the thing
+it looks for?
 
 - **Prose.** Approved words, active voice, sentence length, noun clusters, RFC 2119
   casing, and the unbounded terms ISO/IEC/IEEE 29148:2018 clause 5.2.7 names. A closed
