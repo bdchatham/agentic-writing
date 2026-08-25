@@ -64,6 +64,27 @@ two rules here in direct contradiction. Its coverage now lives in
 `evals/fixtures/procedures/`, and `evals/fixtures/ste-violations.md` keeps a
 gerund-led list item as the negative control: the rule must stay silent there.
 
+## Publishing a mode as an artifact
+
+A specification or a design document published to claude.ai renders through the
+platform's own Markdown stylesheet. That stylesheet sets a section heading below
+the contrast of the body text it heads.
+`styles/artifact/heading-hierarchy.css` is the canonical correction, and the file
+states why each rule exists.
+
+Prepend that block to the Markdown at publish time rather than committing it to
+the artifact's source. The source stays prose, and one file holds the style for
+every artifact.
+
+Two things follow from prepending rather than committing. The published artifact
+stops being a byte-for-byte render of its source file, so the export stays
+mechanical: read the file from git, prepend the block, publish. A reader who
+edits the published page edits a copy, and that change never reaches the
+repository.
+
+The block changes no heading level, so every rule in the tables above still
+matches. ADR 0002 explains why that constraint holds.
+
 ## What the modes do not check
 
 A structure rule reports a missing heading. It cannot report an empty section, a
