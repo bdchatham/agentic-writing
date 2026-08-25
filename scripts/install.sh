@@ -1,54 +1,81 @@
 #!/usr/bin/env bash
-# install.sh — set up the agentic-writing toolkit, on a machine or in a repository.
+# install.sh — install the agentic-writing toolkit on a machine.
 #
-# agentic-writing is a PUBLIC repository, so the fetch needs no auth.
-#
-#   # a machine, once: styles, the fallback Vale config, the artifact builder
 #   curl -fsSL https://raw.githubusercontent.com/bdchatham/agentic-writing/main/scripts/install.sh | bash
 #
-#   # a repository, once: .vale.ini and a CI job, which you then commit
+# That is the whole setup. After it, `vale` works in any directory, with no
+# per-project configuration and nothing to commit.
+#
+# WHICH RULES RUN DEPENDS ON WHERE THE FILE SITS. The contract is a directory
+# convention rather than a config file:
+#
+#   specs/<feature>/spec.md   spec structure, RFC 2119 casing, prose
+#   docs/adr/NNNN-name.md     the four Nygard sections, prose, no sentence cap
+#   docs/design/name.md       the four design sections, prose, no sentence cap
+#   docs/procedures/name.md   the tighter procedure limits
+#   tickets/id.md             the seven ticket sections, prose
+#   anywhere else             prose only
+#
+# Those paths are relative to wherever you run `vale`, so a scratch directory
+# works as well as a repository.
+#
+# WHAT IT INSTALLS
+#
+#   ~/.agentic-writing              the checkout, holding the rules, the Spec Kit
+#                                   templates under .specify/templates, and
+#                                   scripts/build-spec-artifact.sh
+#   <user vale dir>/styles/         symlinks to the rules, so vale finds them
+#   <user vale dir>/.vale.ini       the fallback config, if you have none
+#
+# It is idempotent. Re-run it to pick up new rules.
+#
+# WHAT IT WILL NOT DO: overwrite a Vale config you already have, write into any
+# repository, commit anything, or push.
+#
+# THERE IS ALSO A `repo` MODE, and most people do not need it. It wires a
+# repository into CI so the checks run for everyone rather than for whoever
+# installed this. Reach for it when a team wants the contract enforced on merge,
+# not while one engineer is trying the framework out:
+#
 #   curl -fsSL .../scripts/install.sh | bash -s -- repo
 #
-#   # what a mode would do, without doing it
-#   curl -fsSL .../scripts/install.sh | bash -s -- repo --dry-run
+# Environment:
+#   AGENTIC_WRITING_HOME   checkout location (default: ~/.agentic-writing)
+#   AGENTIC_WRITING_REF    branch or tag to install (default: main)
+#   AGENTIC_WRITING_REPO   source to clone from (default: the GitHub repository).
+#                          A local path works, which is how the installer gets
+#                          tested against a change before it is pushed.
 #
-# THE TWO MODES DIFFER, AND THE DIFFERENCE MATTERS FOR CI.
-#
-#   machine   Writes outside any repository: a checkout, the user-level Vale
-#             config that applies when a repository has none, and a symlink so
-#             `vale` resolves the styles from any directory. Nothing it writes
-#             reaches CI, because a CI runner has no home directory of yours.
-#
-#   repo      Writes files you commit. This is what makes the checks run for
-#             everyone, on every branch, without each person installing
-#             anything. Run it once per repository, not once per pull request.
-#
-#             The workflow it writes CALLS a reusable workflow rather than
-#             copying one. A fix to the check then reaches every repository on
-#             its next pin bump, instead of needing one pull request each. The
-#             pin is a real action ref, so Dependabot raises it.
-#
-# STYLES ARE FETCHED, NOT VENDORED. A consuming repository holds a .vale.ini and
-# a pinned ref, and CI fetches the rules at that ref. The alternative copies 350K
-# of rules into every repository, where each copy drifts until someone re-runs
-# this script. Fetching keeps one source of truth, which is this repository's
-# whole argument, and a pin keeps the fetch reproducible. The trade is that CI
-# needs network, and a bad ref fails loudly rather than checking stale rules.
-#
-# WHAT THIS WILL NOT DO: overwrite a .vale.ini or a workflow a repository
-# already has, commit anything, or push.
-#
-# WHAT IT DOES WRITE, so nothing here surprises you: repo mode replaces
-# .vale/styles/AgenticWriting and .vale/styles/config, leaving anything else
-# under StylesPath alone, and it appends one rule to .gitignore. Machine mode
-# writes a checkout, a styles symlink, and a Vale config if none exists.
+# --dry-run reports what a mode would do, and writes nothing.
 set -euo pipefail
 
-REPO_URL="https://github.com/bdchatham/agentic-writing"
+REPO_URL="${AGENTIC_WRITING_REPO:-https://github.com/bdchatham/agentic-writing}"
 RAW="https://raw.githubusercontent.com/bdchatham/agentic-writing"
 HOME_DIR="${AGENTIC_WRITING_HOME:-$HOME/.agentic-writing}"
 REF="${AGENTIC_WRITING_REF:-main}"
 DRY_RUN=false
+
+usage() {
+  cat <<'USAGE'
+install.sh — the agentic-writing toolkit.
+
+  install.sh                 install on this machine (the usual case)
+  install.sh repo            additionally wire the current repository into CI
+  install.sh --dry-run       report what would happen, write nothing
+  install.sh --help          this text
+
+After a machine install, `vale docs/` works anywhere. Which rules run depends on
+the directory a file sits in:
+
+  specs/<feature>/spec.md   spec structure, RFC 2119 casing, prose
+  docs/adr/NNNN-name.md     Nygard sections, prose, no sentence cap
+  docs/design/name.md       design sections, prose, no sentence cap
+  tickets/id.md             the seven ticket sections, prose
+  anywhere else             prose only
+
+It will not overwrite a Vale config you already have, and it commits nothing.
+USAGE
+}
 
 say() { printf '%s\n' "$*"; }
 
@@ -122,10 +149,21 @@ install_machine() {
   fi
 
   say ""
-  say "Done. The artifact builder lives at:"
-  say "  $HOME_DIR/scripts/build-spec-artifact.sh"
+  say 'Done. `vale docs/` now works in any directory.'
   say ""
-  say "A repository still needs its own setup, or CI checks nothing:"
+  say "Which rules run depends on where a file sits:"
+  say "  specs/<feature>/spec.md   spec structure, RFC 2119 casing, prose"
+  say "  docs/adr/NNNN-name.md     Nygard sections, prose, no sentence cap"
+  say "  docs/design/name.md       design sections, prose, no sentence cap"
+  say "  tickets/id.md             the seven ticket sections, prose"
+  say ""
+  say "Starting a document:"
+  say "  $HOME_DIR/.specify/templates/"
+  say ""
+  say "Publishing a spec as an artifact:"
+  say "  $HOME_DIR/scripts/build-spec-artifact.sh --help"
+  say ""
+  say "CI for a whole team is a separate, optional step:"
   say "  cd <repo> && curl -fsSL $RAW/main/scripts/install.sh | bash -s -- repo"
 }
 
@@ -142,6 +180,8 @@ install_repo() {
     exit 2
   fi
   say "agentic-writing: repository install in $root (pinning ref $REF)"
+  say "  This is the CI path. One engineer trying the framework needs only the"
+  say "  machine install, which requires nothing here."
 
   src="$HOME_DIR"
   if [ ! -d "$src/templates" ]; then

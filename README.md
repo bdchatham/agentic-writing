@@ -40,12 +40,56 @@ Prior art for the concept: <https://llm-coding.github.io/Semantic-Anchors/>
 
 ## Quick start
 
+Install Vale, then the toolkit:
+
 ```bash
 brew install vale          # or: see https://vale.sh/docs
-vale sync                  # fetch the third-party packages named in .vale.ini
-vale ls-config             # confirm the styles load, before you trust any finding
-vale docs/ README.md       # lint this repository with its own rules
+curl -fsSL https://raw.githubusercontent.com/bdchatham/agentic-writing/main/scripts/install.sh | bash
 ```
+
+That is the whole setup. `vale` now works in any directory, with no
+per-project configuration and nothing to commit. Re-run it to pick up new
+rules, and pass `--dry-run` first to see what it touches.
+
+### Which rules run depends on where the file sits
+
+The contract is a directory convention rather than a config file, so a scratch
+directory works as well as a repository:
+
+| Path | What runs |
+|---|---|
+| `specs/<feature>/spec.md` | spec structure, RFC 2119 casing, prose |
+| `docs/adr/NNNN-name.md` | the four Nygard sections, prose, no sentence cap |
+| `docs/design/name.md` | the four design sections, prose, no sentence cap |
+| `docs/procedures/name.md` | the tighter procedure limits |
+| `tickets/id.md` | the seven ticket sections, prose |
+| anywhere else | prose only |
+
+The sentence cap comes off an ADR and a design document on purpose. Those carry
+reasoning, and reasoning travels through subordination that a word limit forces
+you to cut. [ADR 0002](docs/adr/0002-vale-checks-prose-and-the-template.md)
+records the evidence.
+
+### Then
+
+```bash
+vale ls-config             # confirm the styles load, before you trust a finding
+vale specs/                # lint a specification with its structure rules
+~/.agentic-writing/.specify/templates/     # start a document from a template
+~/.agentic-writing/scripts/build-spec-artifact.sh --help   # publish one
+```
+
+### CI, when a team wants it
+
+Optional, and separate. One engineer trying the framework needs none of it.
+
+```bash
+cd <repo> && curl -fsSL .../scripts/install.sh | bash -s -- repo
+```
+
+That writes a `.vale.ini` and a workflow. The workflow calls a reusable one
+from this repository. The checks then run for everyone, rather than for
+whoever installed the toolkit.
 
 ## Repository map
 
