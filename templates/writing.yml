@@ -26,7 +26,11 @@ jobs:
         env:
           REF: '@REF@'
 
+      # Name the document paths. Running Vale over the whole tree lints the
+      # fetched packages' own README files, which are third-party and not ours
+      # to fix. Add a path here when this repository grows a new document type.
       - uses: errata-ai/vale-action@reviewdog
         with:
+          files: docs specs tickets
           reporter: github-pr-check
           fail_on_error: true

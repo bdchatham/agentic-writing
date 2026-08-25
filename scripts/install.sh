@@ -41,19 +41,45 @@ REF="${AGENTIC_WRITING_REF:-main}"
 DRY_RUN=false
 
 say() { printf '%s\n' "$*"; }
-do_or_say() { if $DRY_RUN; then say "  would: $*"; else eval "$*"; fi; }
+
+# Runs a command, or reports it under --dry-run. Arguments pass through as argv,
+# never through eval: a repository path holding a space or an apostrophe broke
+# the eval form, and a path is user input this script does not control.
+run() {
+  if $DRY_RUN; then
+    printf '  would: %s\n' "$*"
+  else
+    "$@"
+  fi
+}
+
+# Same, for the two operations that need a shell redirection.
+render() {  # render TEMPLATE DEST — substitute the pinned ref
+  if $DRY_RUN; then
+    printf '  would: render %s -> %s\n' "$1" "$2"
+  else
+    sed "s|@REF@|$REF|g" "$1" > "$2"
+  fi
+}
+append() {  # append FILE TEXT
+  if $DRY_RUN; then
+    printf '  would: append to %s\n' "$1"
+  else
+    printf '%s' "$2" >> "$1"
+  fi
+}
 
 install_machine() {
   say "agentic-writing: machine install (ref $REF)"
 
   if [ -d "$HOME_DIR/.git" ]; then
     say "  checkout exists at $HOME_DIR, updating"
-    do_or_say "git -C '$HOME_DIR' fetch --quiet origin '$REF'"
-    do_or_say "git -C '$HOME_DIR' checkout --quiet '$REF'"
-    do_or_say "git -C '$HOME_DIR' merge --quiet --ff-only 'origin/$REF' || true"
+    run git -C "$HOME_DIR" fetch --quiet origin "$REF"
+    run git -C "$HOME_DIR" checkout --quiet "$REF"
+    $DRY_RUN || git -C "$HOME_DIR" merge --quiet --ff-only "origin/$REF" 2>/dev/null || true
   else
     say "  cloning into $HOME_DIR"
-    do_or_say "git clone --quiet --branch '$REF' '$REPO_URL' '$HOME_DIR'"
+    run git clone --quiet --branch "$REF" "$REPO_URL" "$HOME_DIR"
   fi
 
   # macOS and Linux put the user Vale directory in different places.
@@ -61,11 +87,11 @@ install_machine() {
     Darwin) vale_dir="$HOME/Library/Application Support/vale" ;;
     *)      vale_dir="${XDG_CONFIG_HOME:-$HOME/.config}/vale" ;;
   esac
-  do_or_say "mkdir -p '$vale_dir/styles'"
+  run mkdir -p "$vale_dir/styles"
 
   for style in AgenticWriting config; do
     say "  linking $style into the user styles directory"
-    do_or_say "ln -sfn '$HOME_DIR/styles/$style' '$vale_dir/styles/$style'"
+    run ln -sfn "$HOME_DIR/styles/$style" "$vale_dir/styles/$style"
   done
 
   if [ -f "$vale_dir/.vale.ini" ]; then
@@ -73,7 +99,7 @@ install_machine() {
     say "    compare against $HOME_DIR/docs/vale-global-config.reference.ini"
   else
     say "  installing the fallback Vale config"
-    do_or_say "cp '$HOME_DIR/docs/vale-global-config.reference.ini' '$vale_dir/.vale.ini'"
+    run cp "$HOME_DIR/docs/vale-global-config.reference.ini" "$vale_dir/.vale.ini"
   fi
 
   say ""
@@ -104,7 +130,7 @@ install_repo() {
     say "    compare against $src/templates/consumer.vale.ini"
   else
     say "  writing .vale.ini"
-    do_or_say "sed 's|@REF@|$REF|g' '$src/templates/consumer.vale.ini' > '$root/.vale.ini'"
+    render "$src/templates/consumer.vale.ini" "$root/.vale.ini"
   fi
 
   wf="$root/.github/workflows/writing.yml"
@@ -112,8 +138,8 @@ install_repo() {
     say "  writing.yml exists, leaving it alone"
   else
     say "  writing .github/workflows/writing.yml"
-    do_or_say "mkdir -p '$root/.github/workflows'"
-    do_or_say "sed 's|@REF@|$REF|g' '$src/templates/writing.yml' > '$wf'"
+    run mkdir -p "$root/.github/workflows"
+    render "$src/templates/writing.yml" "$wf"
   fi
 
   # Fetch the rules now, so `vale` works immediately rather than failing with
@@ -121,10 +147,10 @@ install_repo() {
   # .vale.ini means Vale never consults the user styles directory, so a machine
   # install does not cover this.
   say "  fetching the rules into .vale/styles"
-  do_or_say "rm -rf '$root/.vale/styles'"
-  do_or_say "mkdir -p '$root/.vale/styles'"
-  do_or_say "cp -R '$src/styles/AgenticWriting' '$root/.vale/styles/'"
-  do_or_say "cp -R '$src/styles/config' '$root/.vale/styles/'"
+  run rm -rf "$root/.vale/styles"
+  run mkdir -p "$root/.vale/styles"
+  run cp -R "$src/styles/AgenticWriting" "$root/.vale/styles/"
+  run cp -R "$src/styles/config" "$root/.vale/styles/"
   if ! $DRY_RUN; then
     ( cd "$root" && vale sync >/dev/null 2>&1 ) || \
       say "    note: 'vale sync' did not run. Run it to fetch write-good and proselint."
@@ -132,7 +158,10 @@ install_repo() {
 
   if ! grep -qxF '.vale/' "$root/.gitignore" 2>/dev/null; then
     say "  adding .vale/ to .gitignore"
-    do_or_say "printf '\n# agentic-writing fetches the rules here\n.vale/\n' >> '$root/.gitignore'"
+    append "$root/.gitignore" '
+# agentic-writing fetches the rules here
+.vale/
+'
   fi
 
   say ""
