@@ -1,0 +1,32 @@
+# Installed by agentic-writing. Fetches the rules at a pinned ref, then checks
+# the prose. The pin lives here and in .vale.ini, and both move together.
+name: writing
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  vale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fetched rather than vendored, so one repository holds the rules. The
+      # pin makes it reproducible, and a bad ref fails here rather than
+      # checking silently stale rules.
+      - name: Fetch the writing styles
+        run: |
+          git clone --quiet --depth 1 --branch "$REF" \
+            https://github.com/bdchatham/agentic-writing .vale/src
+          mkdir -p .vale/styles
+          cp -R .vale/src/styles/AgenticWriting .vale/styles/
+          cp -R .vale/src/styles/config .vale/styles/
+        env:
+          REF: '@REF@'
+
+      - uses: errata-ai/vale-action@reviewdog
+        with:
+          reporter: github-pr-check
+          fail_on_error: true
