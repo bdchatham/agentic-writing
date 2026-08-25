@@ -23,6 +23,11 @@
 #             everyone, on every branch, without each person installing
 #             anything. Run it once per repository, not once per pull request.
 #
+#             The workflow it writes CALLS a reusable workflow rather than
+#             copying one. A fix to the check then reaches every repository on
+#             its next pin bump, instead of needing one pull request each. The
+#             pin is a real action ref, so Dependabot raises it.
+#
 # STYLES ARE FETCHED, NOT VENDORED. A consuming repository holds a .vale.ini and
 # a pinned ref, and CI fetches the rules at that ref. The alternative copies 350K
 # of rules into every repository, where each copy drifts until someone re-runs
@@ -30,8 +35,13 @@
 # whole argument, and a pin keeps the fetch reproducible. The trade is that CI
 # needs network, and a bad ref fails loudly rather than checking stale rules.
 #
-# WHAT THIS WILL NOT DO: overwrite a .vale.ini a repository already has, commit
-# anything, or push. It reports and leaves those to you.
+# WHAT THIS WILL NOT DO: overwrite a .vale.ini or a workflow a repository
+# already has, commit anything, or push.
+#
+# WHAT IT DOES WRITE, so nothing here surprises you: repo mode replaces
+# .vale/styles/AgenticWriting and .vale/styles/config, leaving anything else
+# under StylesPath alone, and it appends one rule to .gitignore. Machine mode
+# writes a checkout, a styles symlink, and a Vale config if none exists.
 set -euo pipefail
 
 REPO_URL="https://github.com/bdchatham/agentic-writing"
@@ -102,6 +112,15 @@ install_machine() {
     run cp "$HOME_DIR/docs/vale-global-config.reference.ini" "$vale_dir/.vale.ini"
   fi
 
+  # Without this the first `vale` run fails with "style 'write-good' does not
+  # exist". Repo mode already syncs; machine mode did not, and the gap hid on a
+  # machine whose styles directory was already populated.
+  say "  fetching the declared packages"
+  if ! $DRY_RUN; then
+    ( cd "$vale_dir" && vale sync >/dev/null 2>&1 ) || \
+      say "    note: 'vale sync' failed. Is vale on PATH? Run it in $vale_dir." 
+  fi
+
   say ""
   say "Done. The artifact builder lives at:"
   say "  $HOME_DIR/scripts/build-spec-artifact.sh"
@@ -116,13 +135,26 @@ install_repo() {
     exit 2
   fi
   root="$(git rev-parse --show-toplevel)"
+  if [ "$root" = "$HOME" ]; then
+    say "refusing: \$HOME is a git repository, and this would write .vale.ini there." >&2
+    say "  A .vale.ini in \$HOME shadows the machine config for every repository" >&2
+    say "  that has none. cd to the project you meant." >&2
+    exit 2
+  fi
   say "agentic-writing: repository install in $root (pinning ref $REF)"
 
   src="$HOME_DIR"
   if [ ! -d "$src/templates" ]; then
-    src="$(mktemp -d)"
+    if $DRY_RUN; then
+      say "  no local checkout; a real run would fetch templates at $REF"
+      say "  (nothing further to report without them)"
+      return 0
+    fi
+    TMP_SRC="$(mktemp -d)"
+    trap 'rm -rf "$TMP_SRC"' EXIT
+    src="$TMP_SRC"
     say "  no local checkout, fetching templates at $REF"
-    $DRY_RUN || git clone --quiet --depth 1 --branch "$REF" "$REPO_URL" "$src"
+    git clone --quiet --depth 1 --branch "$REF" "$REPO_URL" "$src"
   fi
 
   if [ -f "$root/.vale.ini" ]; then
@@ -147,26 +179,48 @@ install_repo() {
   # .vale.ini means Vale never consults the user styles directory, so a machine
   # install does not cover this.
   say "  fetching the rules into .vale/styles"
-  run rm -rf "$root/.vale/styles"
   run mkdir -p "$root/.vale/styles"
-  run cp -R "$src/styles/AgenticWriting" "$root/.vale/styles/"
-  run cp -R "$src/styles/config" "$root/.vale/styles/"
+  for style in AgenticWriting config; do
+    # Replace only what this script owns. A repository may already keep its own
+    # rules under StylesPath, and removing the parent would delete them while
+    # the message above says the config was left alone.
+    run rm -rf "$root/.vale/styles/$style"
+    run cp -R "$src/styles/$style" "$root/.vale/styles/"
+  done
   if ! $DRY_RUN; then
     ( cd "$root" && vale sync >/dev/null 2>&1 ) || \
       say "    note: 'vale sync' did not run. Run it to fetch write-good and proselint."
   fi
 
-  if ! grep -qxF '.vale/' "$root/.gitignore" 2>/dev/null; then
-    say "  adding .vale/ to .gitignore"
+  # This repository's own accepted terms. Vale reads a vocabulary from
+  # StylesPath/config/vocabularies, which the fetch above overwrites, so the
+  # committed copy lives outside it and gets installed into place. CI does the
+  # same. Vale errors on a Vocab it cannot find, so the file always exists.
+  run mkdir -p "$root/.vale/vocab"
+  if ! $DRY_RUN && [ ! -f "$root/.vale/vocab/accept.txt" ]; then
+    cat > "$root/.vale/vocab/accept.txt" <<'VOCAB'
+# Terms this repository accepts, one per line, case-sensitive. Commit this file.
+# The rules ship their own vocabulary and overwrite it on every install, so a
+# term that belongs to this repository belongs here.
+VOCAB
+  fi
+  run mkdir -p "$root/.vale/styles/config/vocabularies/Local"
+  run cp "$root/.vale/vocab/accept.txt" \
+        "$root/.vale/styles/config/vocabularies/Local/accept.txt"
+
+  if ! grep -qxF '.vale/styles/' "$root/.gitignore" 2>/dev/null; then
+    say "  adding the fetched paths to .gitignore"
     append "$root/.gitignore" '
-# agentic-writing fetches the rules here
-.vale/
+# agentic-writing fetches the rules into these. Anything else under .vale/ is
+# yours, including .vale/vocab/Local/accept.txt.
+.vale/styles/
+.vale/src/
 '
   fi
 
   say ""
   say "Commit these, and the checks run for everyone on every branch:"
-  say "  .vale.ini  .github/workflows/writing.yml  .gitignore"
+  say "  .vale.ini  .github/workflows/writing.yml  .gitignore  .vale/vocab/accept.txt"
   say ""
   say "The rules themselves are in .vale/, which is gitignored. Re-run this to"
   say "refresh them, or raise the pin in .vale.ini and writing.yml together." 
@@ -180,7 +234,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY_RUN=true; shift ;;
     machine|repo) MODE="$1"; shift ;;
-    -h|--help) sed -n '2,32p' "$0"; exit 0 ;;
+    -h|--help) usage; exit 0 ;;
     *) say "unknown argument: $1" >&2; exit 2 ;;
   esac
 done

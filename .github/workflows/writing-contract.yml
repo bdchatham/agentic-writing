@@ -1,0 +1,118 @@
+# Reusable writing-contract check. A consuming repository calls this rather than
+# copying it, so a fix here reaches every caller on their next pin bump instead
+# of needing one pull request per repository.
+#
+# Call it:
+#
+#   jobs:
+#     writing:
+#       uses: bdchatham/agentic-writing/.github/workflows/writing-contract.yml@v1
+#       permissions:
+#         contents: read
+#         pull-requests: write
+#
+# The rules come from the same ref the caller pinned. This workflow reads its own
+# ref out of github.workflow_ref, so the rules and the job can never disagree
+# about which version they are.
+name: writing contract
+
+on:
+  workflow_call:
+    inputs:
+      paths:
+        description: >-
+          JSON array of paths to lint, for a repository whose documents do not
+          live in the usual places. Omit it and the job lints whichever of
+          docs, specs, tickets, designs and README.md exist.
+        type: string
+        required: false
+        default: ''
+      fail_level:
+        description: 'Severity that fails the job: error, warning or suggestion.'
+        type: string
+        required: false
+        default: error
+
+jobs:
+  vale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve the rules ref
+        id: rules
+        env:
+          # owner/repo/.github/workflows/file.yml@refs/tags/v1
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          ref="${WORKFLOW_REF##*@}"
+          if [ -z "$ref" ]; then
+            echo "could not read a ref out of '$WORKFLOW_REF'" >&2
+            exit 1
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Rules ref: $ref"
+
+      - name: Fetch the writing rules
+        uses: actions/checkout@v4
+        with:
+          repository: bdchatham/agentic-writing
+          ref: ${{ steps.rules.outputs.ref }}
+          path: .vale/src
+
+      - name: Install the styles
+        run: |
+          set -euo pipefail
+          mkdir -p .vale/styles
+          cp -R .vale/src/styles/AgenticWriting .vale/styles/
+          cp -R .vale/src/styles/config .vale/styles/
+          # The caller's own accepted terms. Committed outside the fetched tree,
+          # because the copy above replaces everything inside it.
+          mkdir -p .vale/styles/config/vocabularies/Local
+          if [ -f .vale/vocab/accept.txt ]; then
+            cp .vale/vocab/accept.txt .vale/styles/config/vocabularies/Local/accept.txt
+          else
+            : > .vale/styles/config/vocabularies/Local/accept.txt
+          fi
+
+      # Vale treats a named path that does not exist as a fatal argument error,
+      # not as nothing to lint. Almost no repository has every document
+      # directory, so the list is built from what is actually there.
+      - name: Choose the paths to lint
+        id: paths
+        env:
+          GIVEN: ${{ inputs.paths }}
+        run: |
+          set -euo pipefail
+          if [ -n "$GIVEN" ]; then
+            echo "files=$GIVEN" >> "$GITHUB_OUTPUT"
+            echo "Linting the caller's paths: $GIVEN"
+            exit 0
+          fi
+          found=""
+          for p in README.md docs specs tickets designs; do
+            [ -e "$p" ] || continue
+            found="${found:+$found,}\"$p\""
+          done
+          if [ -z "$found" ]; then
+            echo "no document paths found; nothing to lint"
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "files=[$found]" >> "$GITHUB_OUTPUT"
+          echo "Linting: [$found]"
+
+      # --no-global: a runner has no user-level Vale config and a laptop does,
+      # so without this the two disagree about which rules ran.
+      # --glob: .vale/ holds the fetched rules and the packages' own README
+      # files, which are not this repository's prose to fix.
+      - name: Lint prose against the writing contract
+        if: steps.paths.outputs.files != ''
+        uses: vale-cli/vale-action@reviewdog
+        with:
+          reporter: github-pr-review
+          fail_level: ${{ inputs.fail_level }}
+          files: ${{ steps.paths.outputs.files }}
+          vale_flags: '--no-global --glob=!.vale/**'
