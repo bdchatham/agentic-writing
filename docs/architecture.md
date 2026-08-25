@@ -57,6 +57,7 @@ derived from it, so the generation hint and the verification rule cannot drift a
 | Prove the anchor still resolves | Recognition probes, per model version |
 | Prove the rules still work | Fixture corpus with expected findings |
 | Prevent drift between the two sides | Generate the prompt from the registry |
+| Publish an artifact without drift | Build it with a script, from git and the canonical style |
 
 ### Plans and ensures
 

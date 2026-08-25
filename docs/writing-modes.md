@@ -72,9 +72,20 @@ the contrast of the body text it heads.
 `styles/artifact/heading-hierarchy.css` is the canonical correction, and the file
 states why each rule exists.
 
-Prepend that block to the Markdown at publish time rather than committing it to
-the artifact's source. The source stays prose, and one file holds the style for
-every artifact.
+`scripts/build-spec-artifact.sh` performs the step. It reads the specification
+from git, prepends the canonical style, and writes a file the caller publishes:
+
+```sh
+scripts/build-spec-artifact.sh --repo ~/sei-load \
+  --ref brandon2/spec-contract-deployment-registry \
+  --out /tmp/artifacts contract-deployment-registry
+```
+
+Use the script rather than assembling the file by hand. It reads from git, so an
+uncommitted edit cannot reach a published artifact. It reads the style from the
+canonical file, so an artifact cannot drift from it. Prepending at publish time
+also keeps the presentation out of the specification source, and one file then
+holds the style for every artifact.
 
 Two things follow from prepending rather than committing. The published artifact
 stops being a byte-for-byte render of its source file, so the export stays
