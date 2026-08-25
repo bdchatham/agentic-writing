@@ -57,7 +57,7 @@ inside the sub-domain it implements. The path is the relationship.
 
 ### The artifacts and their anchors
 
-| Artifact | Anchors | Stated in text, no anchor |
+| Artifact | Semantic Anchors | Stated in text, no anchor |
 |---|---|---|
 | `hld.md` | arc42 · C4 model · Domain-Driven Design | the sub-domain declaration |
 | `spec.md` | EARS · RFC 2119 · Connextra · INVEST · Gherkin · DDD ubiquitous language | boundary commitments |
@@ -123,7 +123,7 @@ Each level gets a Vale mode, scoped by its path. Three modes exist. Two are new.
 | Mode | Path | Checks |
 |---|---|---|
 | Design (exists) | `docs/design/**` | Non-goals · Alternatives · Trade-offs · Open questions |
-| Spec (exists) | `specs/**` | Anchors · Success Criteria · Independent Test |
+| Spec (exists) | `specs/**` | Semantic Anchors · Success Criteria · Independent Test |
 | HLD (new) | `docs/design/*/hld.md` | Sub-domains declared |
 | Plan (new) | `**/plan.md` | Boundary Commitments · Revalidation Triggers · Existing Architecture Analysis |
 

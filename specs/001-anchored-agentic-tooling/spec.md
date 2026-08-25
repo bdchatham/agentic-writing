@@ -15,7 +15,7 @@ it around spec-driven development with a clean semantic anchoring on technical d
 doc writing style."
 
 <!-- vale off -->
-## Anchors
+## Semantic Anchors
 
 Named once. Not restated below.
 

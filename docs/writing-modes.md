@@ -19,7 +19,7 @@ README, so a structure rule turns on for one mode and stays off everywhere else.
 
 | Required | Rule | Why |
 |---|---|---|
-| `## Anchors` | `Spec-Anchors` | Methods named once. Without the block, the body restates them. |
+| `## Semantic Anchors` | `Spec-Anchors` | Methods named once. Without the block, the body restates them. |
 | `## Success Criteria` | `Spec-SuccessCriteria` | A spec with no measurable outcome cannot be closed. |
 | `**Independent Test**` | `Spec-IndependentTest` | A story without one becomes a ticket whose implementer invents the bar. |
 

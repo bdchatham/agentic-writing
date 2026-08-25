@@ -2,9 +2,9 @@
 # Presence only. Vale cannot judge whether the section says anything.
 # Scoped in .vale.ini; without that scope this fires on every file.
 extends: occurrence
-message: "Spec is missing the '## Anchors' block. Name the methods once so the body does not restate them."
+message: "Spec is missing the '## Semantic Anchors' block. Name the methods once so the body does not restate them."
 level: error
 scope: raw
 ignorecase: true
 min: 1
-token: '(?m)^## +Anchors\b'
+token: '(?m)^## +Semantic Anchors\b'

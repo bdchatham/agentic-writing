@@ -103,7 +103,7 @@ Four artifacts carry a structure contract. Ordinary prose carries the prose rule
 | Artifact | Path | Gate checks |
 |---|---|---|
 | Design | `docs/design/**` | Non-goals, Alternatives, Trade-offs, Open questions |
-| Spec | `specs/**` | Anchors, Success Criteria, Independent Test |
+| Spec | `specs/**` | Semantic Anchors, Success Criteria, Independent Test |
 | Ticket | `tickets/**` | the seven sections of the body |
 | Procedure | `docs/procedures/**` | 20-word sentences, imperative steps |
 
@@ -117,7 +117,7 @@ apply, each fixing something the upstream template leaves to the author.
 
 | Delta | In | Fixes |
 |---|---|---|
-| `## Anchors`, each with a *does not cover* column | `spec.md` | The body restates the method without it |
+| `## Semantic Anchors`, each with a *does not cover* column | `spec.md` | The body restates the method without it |
 | `## Glossary` | `spec.md` | An agent reads linearly and cannot ask what a term means |
 | `## Boundary Context` | `spec.md` | A spec with no stated boundary grows while open |
 | `**Objective:** As a <role>, I want <X>, so that <Y>` | each requirement | Names the beneficiary; prevents an orphan requirement |
