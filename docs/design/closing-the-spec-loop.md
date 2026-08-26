@@ -77,7 +77,7 @@ The framework already has two planes and one source of truth. This adds a third.
         +--------------------+--------------------+
         |                    |                    |
    AUTHORING           VERIFICATION          COLLABORATION
-   Spec Kit            Vale + tests          Omnigent
+   Spec Kit            Vale + tests          session host
         |                    |                    |
    spec, plan,         style rules,         shared session,
    tasks, tickets      cross-refs,          human + agent,
@@ -103,11 +103,15 @@ stays.
 plainly what it cannot. The registry's `verifier.coverage` field already carries
 `none` as a legitimate value. Two of eight anchors declare it.
 
-**Collaboration — Omnigent.** Holds a session that people and agents share. A
-reader leaves feedback as a message in that session rather than as a comment on a
-pull request that will close. Agentic orchestration runs from the same chat
+**Collaboration — a session host.** Holds a session that people and agents share.
+A reader leaves feedback as a message in that session rather than as a comment on
+a pull request that will close. Agentic orchestration runs from the same chat
 surface, and that surface is where someone dispatches independent review by hand
 today.
+
+Any host that holds a durable shared session satisfies this plane. The one an
+organisation picks is a decision for that organisation's own repository, so this
+document names the role rather than the product.
 
 ### The change that matters most
 
@@ -142,7 +146,7 @@ should say so.
 ## What this breaks into
 
 Three specifications, in dependency order. Each is independently valuable, and
-the first two do not depend on Omnigent existing.
+the first two do not depend on a session host existing.
 
 **Spec A — Spec Kit and Vale.** The authoring and verification planes. It adopts
 the two anchors, adds the closure clause, and decides which of the four failures
@@ -151,7 +155,7 @@ belongs. Vale is a prose linter, so cross-reference integrity may be a repositor
 test rather than a style rule. Its output is a smaller doctrine, not a larger
 one.
 
-**Spec B — Omnigent integration.** The collaboration plane. It decides three things. How a session
+**Spec B — Session host integration.** The collaboration plane. It decides three things. How a session
 carries durable feedback for an artifact that later merges. How a chat interface
 dispatches and records a review round. What the session stores rather than git. Its hardest question is the boundary between a session and a
 repository. Getting that wrong makes the repository optional, and the repository
@@ -212,7 +216,7 @@ failure mode is quiet.
 3. Whether a specification belongs in the repository it describes. This cycle
    published to an artifact and closed the committing pull request. That decision
    is still open, and Spec B changes its answer.
-4. What Omnigent stores. Named here because it is the boundary question, and
+4. What the session stores. Named here because it is the boundary question, and
    answered in Spec B.
 
 ## References
