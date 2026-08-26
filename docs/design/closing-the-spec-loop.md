@@ -157,11 +157,15 @@ dispatches and records a review round. What the session stores rather than git. 
 repository. Getting that wrong makes the repository optional, and the repository
 is what makes the work auditable.
 
-**Spec C — Skill integrations.** How the existing skills bind to both planes.
-`/xreview` runs independent review, `/linear-ticket` files the work, and
-`/brandon-code` and `/idiomatic` hold the code lanes. Its hardest question is
-precedence. Four skills state overlapping rules today, and the doctrine file
-resolves that by hand.
+**Spec C — Tool integrations.** How the tools already in use bind to both planes.
+Four of them matter here: one runs independent multi-specialist review, one files
+tickets from a specification, and two review code, for step structure and for
+language idiom. Its hardest question is precedence. All four state overlapping
+rules today, and a doctrine file resolves the overlap by hand.
+
+Naming those four adds nothing a reader outside one organisation can act on. What
+transfers is the shape. Once more than one tool carries rules, something has to
+say which rule wins, and a hand-maintained file is the weakest answer available.
 
 ## Alternatives
 
