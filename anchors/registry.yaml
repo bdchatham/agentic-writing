@@ -184,10 +184,16 @@ anchors:
         - AgenticWriting.ADR-Context
         - AgenticWriting.ADR-Decision
         - AgenticWriting.ADR-Consequences
-        - AgenticWriting.Design-Alternatives
-        - AgenticWriting.Design-Tradeoffs
       not_checkable:
         - "Whether Consequences states the real negative consequence."
+        - "Whether a superseded record was superseded rather than edited. Vale reads
+          one file and cannot see the pair."
+      correction: >-
+        Until 2026-08-27 this entry also claimed Design-Alternatives and
+        Design-Tradeoffs. Nygard's format is Title, Status, Context, Decision,
+        Consequences, and defines neither. Considered Options and Pros and Cons are
+        MADR additions. The two rules stay on the ADR path in .vale.ini as a local
+        contract; they are not evidence for this anchor.
     recognition:
       probe: "What concepts do you associate with 'ADR according to Nygard'?"
       expect: [context, decision, consequences, status, superseded, immutable]
@@ -209,13 +215,23 @@ anchors:
     verifier:
       coverage: partial
       rules:
-        - AgenticWriting.Design-NonGoals
-        - AgenticWriting.Design-OpenQuestions
+        - AgenticWriting.Design-Arc42Order
       not_checkable:
-        - "Section quality. Presence is checked for the design writing mode; whether
-          a section says anything is judgement."
-        - "Whether a missing section was omitted because it is empty, which arc42
-          permits, or because the author forgot it."
+        - "Section presence. arc42 permits omitting a section that would be empty, so
+          an absent section is indistinguishable from a deliberately omitted one. A
+          presence gate would invent a requirement the standard does not make. Order
+          is checked instead, because the template does fix the sequence."
+        - "Section quality. Whether a section says anything is judgement."
+        - "Whether a heading means what arc42 means by it. The rule matches names, not
+          content, and it ignores any heading outside the twelve."
+        - "A section spelled in a way the alias list does not carry. Matching is exact
+          and deliberately conservative, so an unrecognised heading costs a missed
+          check rather than a false positive."
+      correction: >-
+        Until 2026-08-27 this entry claimed Design-NonGoals and Design-OpenQuestions
+        as its verifier. arc42 defines neither section, so the recorded coverage was
+        delivered by rules that check something else. Those two are this repository's
+        own design contract and stay, attributed to it rather than to arc42.
     recognition:
       probe: "What concepts do you associate with 'arc42'?"
       expect: [12 sections, building block view, runtime view, crosscutting concepts, quality requirements]

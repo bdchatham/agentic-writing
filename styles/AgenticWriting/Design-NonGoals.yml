@@ -1,4 +1,5 @@
-# arc42: constraints and scope are named sections. Section presence is checkable; quality is not.
+# A house section, not an arc42 one -- arc42 defines no Non-goals section. The
+# arc42 anchor is verified by Design-Arc42Order and by nothing else.
 # Presence only. Vale cannot judge whether the section says anything.
 # Scoped in .vale.ini; without that scope this fires on every file.
 extends: occurrence
