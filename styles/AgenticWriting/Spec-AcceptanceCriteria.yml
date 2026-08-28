@@ -16,12 +16,13 @@
 # The fence is tracked as a mode, matching EARS-CriterionShall. Inside a fence
 # nothing is markdown structure.
 #
-# Level is warning, not error, while specs written before the template still
-# emit Spec Kit's '**Acceptance Scenarios**' paragraph. It goes to error once
-# those are converted.
+# Error, not warning. It ran at warning while specs written before the template
+# still emitted Spec Kit's '**Acceptance Scenarios**' paragraph. The only
+# specification in this repository now carries the heading, so the condition
+# that held it back is gone.
 extends: script
 message: "Spec has no '#### Acceptance Criteria' heading, so EARS conformance was never checked."
-level: warning
+level: error
 scope: raw
 script: |
   text := import("text")

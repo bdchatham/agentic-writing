@@ -65,9 +65,10 @@ false_positives:
       negative_control: >-
         Fires exactly once on a document with no criteria heading, and once on
         a document whose only heading sits inside a fenced code block.
-      severity: warning
+      severity: error
       severity_note: >-
         A document-level presence check, so a sentence corpus cannot exercise
         it directly. It stayed silent on all 18 documents once the heading was
-        present. Warning rather than error while specifications written before
-        the template still emit Spec Kit's Acceptance Scenarios paragraph.
+        present, and fires once on a document without it. Raised from warning
+        to error when the repository's only specification was converted to the
+        template, which removed the reason it had been held back.
