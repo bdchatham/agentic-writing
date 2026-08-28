@@ -67,6 +67,12 @@ jobs:
       - name: No artifact cites a private skill or agent as an authority
         run: ./scripts/check-no-private-citations.sh
 
+      # The coverage manifest says what each anchor actually checks. A claim
+      # nobody verifies is how arc42 came to credit rules that check something
+      # else, so the manifest is enforced rather than trusted.
+      - name: Coverage manifest is true
+        run: ./scripts/check-coverage.sh
+
       - name: Every registry rule reference resolves to a rule file
         run: |
           python3 - <<'PY'
