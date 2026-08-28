@@ -3,16 +3,45 @@
 # on. Without it that rule checks nothing and reports success, which is worse
 # than no rule: it manufactures confidence.
 #
-# This rule exists to turn that silence into a finding. It is deliberately a
-# plain occurrence check, the same shape as the other 30 rules.
+# This rule turns that silence into a finding.
 #
-# Level is warning, not error, while the spec template still emits Spec Kit's
-# '**Acceptance Scenarios**' paragraph rather than this heading. It goes to
-# error when the template lands.
-extends: occurrence
+# A SCRIPT RULE, NOT AN OCCURRENCE COUNT. It needs `scope: raw` to see document
+# structure, and raw text does not distinguish a heading from a heading quoted
+# inside a fenced code block. As an occurrence rule it counted the quoted one,
+# so a specification that merely documents the required format satisfied the
+# check while having no criteria section — the silence detector could itself be
+# silenced. The template and docs/writing-modes.md both quote the heading, so
+# this was not hypothetical.
+#
+# The fence is tracked as a mode, matching EARS-CriterionShall. Inside a fence
+# nothing is markdown structure.
+#
+# Level is warning, not error, while specs written before the template still
+# emit Spec Kit's '**Acceptance Scenarios**' paragraph. It goes to error once
+# those are converted.
+extends: script
 message: "Spec has no '#### Acceptance Criteria' heading, so EARS conformance was never checked."
 level: warning
 scope: raw
-ignorecase: true
-min: 1
-token: '(?m)^#+[ \t]+acceptance criteria'
+script: |
+  text := import("text")
+  matches := []
+  in_fence := false
+  found := false
+  lines := text.split(scope, "\n")
+
+  for line in lines {
+    if text.re_match(`^[ \t]*(?:`+"```"+`|~~~)`, line) {
+      in_fence = !in_fence
+    } else if !in_fence {
+      if text.re_match(`(?i)^[ \t]*#+[ \t]+acceptance criteria`, line) {
+        found = true
+      }
+    }
+  }
+
+  if !found {
+    span := len(lines[0])
+    if span == 0 { span = 1 }
+    matches = append(matches, {begin: 0, end: span})
+  }

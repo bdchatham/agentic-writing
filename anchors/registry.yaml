@@ -107,7 +107,7 @@ anchors:
       verified: []
 
   - id: ears
-    admission: grandfathered
+    admission: admitted
     name: EARS (Easy Approach to Requirements Syntax)
     steward: Alistair Mavin
     url: https://alistairmavin.com/ears/
