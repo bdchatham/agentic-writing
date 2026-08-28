@@ -23,6 +23,7 @@ defaults:
 anchors:
 
   - id: asd-ste100
+    admission: grandfathered
     name: ASD-STE100 Simplified Technical English
     edition: "Issue 9, January 2025"
     steward: ASD / STEMG
@@ -77,6 +78,7 @@ anchors:
       verified: []
 
   - id: rfc2119
+    admission: grandfathered
     name: RFC 2119 requirement keywords
     steward: IETF
     url: https://www.rfc-editor.org/rfc/rfc2119
@@ -105,6 +107,7 @@ anchors:
       verified: []
 
   - id: ears
+    admission: grandfathered
     name: EARS (Easy Approach to Requirements Syntax)
     steward: Alistair Mavin
     url: https://alistairmavin.com/ears/
@@ -180,6 +183,7 @@ anchors:
       verified: []
 
   - id: diataxis
+    admission: grandfathered
     name: Diátaxis documentation framework
     steward: Daniele Procida
     url: https://diataxis.fr/
@@ -208,6 +212,7 @@ anchors:
       verified: []
 
   - id: adr-nygard
+    admission: grandfathered
     name: Architecture Decision Record (Nygard format)
     steward: Michael Nygard
     url: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions.html
@@ -247,6 +252,7 @@ anchors:
       verified: []
 
   - id: arc42
+    admission: grandfathered
     name: arc42 architecture documentation template
     steward: Gernot Starke, Peter Hruschka
     url: https://arc42.org/
@@ -285,6 +291,7 @@ anchors:
       verified: []
 
   - id: conventional-commits
+    admission: grandfathered
     name: Conventional Commits 1.0.0
     steward: community
     url: https://www.conventionalcommits.org/en/v1.0.0/
@@ -312,6 +319,7 @@ anchors:
       verified: []
 
   - id: bluf
+    admission: grandfathered
     name: BLUF (Bottom Line Up Front)
     steward: US Department of Defense writing practice
     url: https://en.wikipedia.org/wiki/BLUF_(communication)
