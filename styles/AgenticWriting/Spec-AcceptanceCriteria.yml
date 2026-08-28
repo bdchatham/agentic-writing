@@ -1,0 +1,18 @@
+# A specification states its acceptance criteria under a heading named
+# "Acceptance Criteria", because that heading is what EARS-CriterionShall keys
+# on. Without it that rule checks nothing and reports success, which is worse
+# than no rule: it manufactures confidence.
+#
+# This rule exists to turn that silence into a finding. It is deliberately a
+# plain occurrence check, the same shape as the other 30 rules.
+#
+# Level is warning, not error, while the spec template still emits Spec Kit's
+# '**Acceptance Scenarios**' paragraph rather than this heading. It goes to
+# error when the template lands.
+extends: occurrence
+message: "Spec has no '#### Acceptance Criteria' heading, so EARS conformance was never checked."
+level: warning
+scope: raw
+ignorecase: true
+min: 1
+token: '(?m)^#+[ \t]+acceptance criteria'
