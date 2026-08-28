@@ -50,6 +50,11 @@ jobs:
       - name: Run fixture expectations
         run: ./evals/run.sh
 
+      # Per-rule golden files. Each rule is isolated by its own config, so a
+      # failure names one rule, and the golden pins line, column and message.
+      - name: Run per-rule golden fixtures
+        run: ./evals/rules/run.sh
+
   registry-consistency:
     runs-on: ubuntu-latest
     steps:
