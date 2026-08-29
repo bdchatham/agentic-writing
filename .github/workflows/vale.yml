@@ -71,6 +71,13 @@ jobs:
       - name: Run gate golden fixtures
         run: ./evals/gates/run.sh
 
+      # The consumer path. install.sh and writing-contract.yml carried every
+      # consuming repository and neither had ever run: this repository's own CI
+      # is a different file that installs the rules differently, so green here
+      # said nothing about either.
+      - name: Run the consumer path end to end
+        run: ./evals/consumer/run.sh
+
   registry-consistency:
     runs-on: ubuntu-latest
     steps:

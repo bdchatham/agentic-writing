@@ -62,47 +62,25 @@ jobs:
           ref: ${{ steps.rules.outputs.ref }}
           path: .vale/src
 
-      - name: Install the styles
+      # vale-action brings its own Vale, but the setup below runs `vale sync`
+      # before it, so one has to be on PATH first. Pinned to the floor this
+      # repository's rules need: on 3.14.0 a sequence of tag: tokens matches
+      # nothing and a rule silently stops firing.
+      - name: Install Vale
         run: |
-          set -euo pipefail
-          mkdir -p .vale/styles
-          cp -R .vale/src/styles/AgenticWriting .vale/styles/
-          cp -R .vale/src/styles/config .vale/styles/
-          # The caller's own accepted terms. Committed outside the fetched tree,
-          # because the copy above replaces everything inside it.
-          mkdir -p .vale/styles/config/vocabularies/Local
-          if [ -f .vale/vocab/accept.txt ]; then
-            cp .vale/vocab/accept.txt .vale/styles/config/vocabularies/Local/accept.txt
-          else
-            : > .vale/styles/config/vocabularies/Local/accept.txt
-          fi
+          VALE_VERSION=3.17.1
+          curl -sfL "https://github.com/vale-cli/vale/releases/download/v${VALE_VERSION}/vale_${VALE_VERSION}_Linux_64-bit.tar.gz" \
+            | tar -xz -C /usr/local/bin vale
+          vale --version
 
-      # Vale treats a named path that does not exist as a fatal argument error,
-      # not as nothing to lint. Almost no repository has every document
-      # directory, so the list is built from what is actually there.
-      - name: Choose the paths to lint
+      # Both steps live in a script so this workflow can be tested. Inline
+      # shell here is reachable only by merging and hoping, and this is the one
+      # file in the repository that every consumer runs and no job ever did.
+      - name: Install the styles and choose the paths
         id: paths
         env:
           GIVEN: ${{ inputs.paths }}
-        run: |
-          set -euo pipefail
-          if [ -n "$GIVEN" ]; then
-            echo "files=$GIVEN" >> "$GITHUB_OUTPUT"
-            echo "Linting the caller's paths: $GIVEN"
-            exit 0
-          fi
-          found=""
-          for p in README.md docs specs tickets designs; do
-            [ -e "$p" ] || continue
-            found="${found:+$found,}\"$p\""
-          done
-          if [ -z "$found" ]; then
-            echo "no document paths found; nothing to lint"
-            echo "files=" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "files=[$found]" >> "$GITHUB_OUTPUT"
-          echo "Linting: [$found]"
+        run: ./.vale/src/scripts/consumer-lint-setup.sh .vale/src "$GIVEN"
 
       # --no-global: a runner has no user-level Vale config and a laptop does,
       # so without this the two disagree about which rules ran.
