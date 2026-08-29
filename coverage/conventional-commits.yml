@@ -3,9 +3,10 @@ source: "Conventional Commits 1.0.0"
 total_topics: 2
 enumerated: full
 note: >-
-  Vale does not read commit messages, so no rule here can check this. The
-  registry records coverage as full because commitlint checks it in CI, which
-  is a different verifier and is named as such.
+  Coverage is none. Vale cannot read a commit message, so no rule here can check
+  this. An earlier note claimed commitlint checked it in CI; no commitlint
+  exists in this repository, and restating the claim here turned one unverified
+  sentence into two. If a commit-message gate is wanted, it is unbuilt work.
 topics:
   subject-is-type-scope-description: false
   breaking-change-is-marked: false

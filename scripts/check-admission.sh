@@ -63,8 +63,15 @@ for a in anchors:
         exempt.append(aid)
         continue
 
+    # An anchor with no rules satisfied artifacts 2 and 4 by vacuous truth:
+    # "every rule has a fixture" is true of no rules. A standard nothing checks
+    # is exactly what the admission rule exists to keep out.
+    if not rules:
+        bad.append(f"anchor '{aid}' is admitted but names no rules, so it checks nothing. "
+                   f"An anchor with no verifier belongs at coverage: none and admission: grandfathered")
+
     if not entry:
-        bad.append(f"anchor '{aid}' is admitted but its registry entry lacks steward, licence or probe")
+        bad.append(f"anchor '{aid}' is admitted but its registry entry lacks steward, licence or recognition test")
     if not cov:
         bad.append(f"anchor '{aid}' is admitted but has no coverage/{aid}.yml")
     for r in miss_fix:

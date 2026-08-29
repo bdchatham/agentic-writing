@@ -1,3 +1,32 @@
+<!--
+MODIFIED FROM UPSTREAM. GitHub Spec Kit ships this file; we carry deltas.
+Keeping the fork visible matters: `specify` overwrites this on re-init, and a
+silent overwrite would take the deltas with it. The pristine copy sits beside
+this one as spec-template.upstream.md, so the fork is diffable.
+
+Deltas, and the reason for each:
+
+  ## Semantic Anchors      Methods named once. Without it the body restates
+                           them, and the spec grows without saying more.
+  ## Glossary              An agent reads linearly and cannot ask what a term
+                           means. Ubiquitous language, in one place.
+  ## Boundary Context      A spec with no stated boundary grows while it is open.
+  ### Requirement N        Requirements carry their own acceptance criteria
+                           rather than sitting in a flat list, so no requirement
+                           is an orphan.
+  **Objective:**           Names the beneficiary, not only the behaviour.
+  **Traces to:**           Every requirement points back at the story it serves.
+  #### Acceptance Criteria EARS, with a named actor. THE <system> SHALL is the
+                           closed grammar that keeps criteria readable.
+  *Verifier:*              A success criterion names the command that checks it,
+                           or says judgement. An unmarked criterion is not honest.
+
+Write SHALL in uppercase. It satisfies EARS and RFC 2119 at once, and both run
+at error on this path.
+
+Delete every bracketed placeholder and this comment before the spec ships.
+-->
+
 # Feature Specification: [FEATURE NAME]
 
 **Feature Branch**: `[###-feature-name]`
@@ -8,124 +37,121 @@
 
 **Input**: User description: "$ARGUMENTS"
 
+## Semantic Anchors
+
+Named once. Not restated below. Three to six. Each needs a *does not cover*
+entry, because an anchor is a hint and the gap is the honest part.
+
+| Anchor | Governs | Does not cover |
+|---|---|---|
+| EARS | acceptance criteria syntax | whether the template fits the real class |
+| RFC 2119 | normative keywords | whether the obligation is the right one |
+| INVEST | whether a story is a real slice | whether the slice delivers value |
+
+## Glossary
+
+Every term this spec uses in a specific sense, defined once.
+
+- **[Term]**: [What it means here, precisely enough that two readers agree.]
+
+## Boundary Context
+
+What this specification is inside, and what it is not responsible for.
+
+- **Sits within**: [the system or sub-domain]
+- **Owns**: [the behaviour this spec decides]
+- **Does not own**: [the adjacent behaviour, and where it is decided instead]
+
 ## User Scenarios & Testing *(mandatory)*
 
-<!--
-  IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
-  Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
-  you should still have a viable MVP (Minimum Viable Product) that delivers value.
-
-  Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
-  Think of each story as a standalone slice of functionality that can be:
-  - Developed independently
-  - Tested independently
-  - Deployed independently
-  - Demonstrated to users independently
--->
+Order stories by priority. Each must be independently testable: implementing
+only that one still leaves something usable.
 
 ### User Story 1 - [Brief Title] (Priority: P1)
 
-[Describe this user journey in plain language]
+[The journey in plain language.]
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: [The value, and why it ranks here.]
 
-**Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
+**Independent Test**: [The concrete action someone takes to confirm it works.]
 
 **Acceptance Scenarios**:
 
 1. **Given** [initial state], **When** [action], **Then** [expected outcome]
-2. **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
 ### User Story 2 - [Brief Title] (Priority: P2)
 
-[Describe this user journey in plain language]
+[The journey in plain language.]
 
-**Why this priority**: [Explain the value and why it has this priority level]
+**Why this priority**: [The value, and why it ranks here.]
 
-**Independent Test**: [Describe how this can be tested independently]
-
-**Acceptance Scenarios**:
-
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
-
----
-
-### User Story 3 - [Brief Title] (Priority: P3)
-
-[Describe this user journey in plain language]
-
-**Why this priority**: [Explain the value and why it has this priority level]
-
-**Independent Test**: [Describe how this can be tested independently]
+**Independent Test**: [The concrete action someone takes to confirm it works.]
 
 **Acceptance Scenarios**:
 
 1. **Given** [initial state], **When** [action], **Then** [expected outcome]
-
----
-
-[Add more user stories as needed, each with an assigned priority]
 
 ### Edge Cases
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right edge cases.
--->
-
 - What happens when [boundary condition]?
-- How does system handle [error scenario]?
+- How does the system handle [error scenario]?
 
 ## Requirements *(mandatory)*
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right functional requirements.
--->
+Each requirement carries its own acceptance criteria, so no requirement is an
+orphan and no criterion floats free of a requirement.
 
-### Functional Requirements
+### Requirement 1: [Name]
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
+**Objective:** As a [role], I want [capability], so that [benefit].
 
-*Example of marking unclear requirements:*
+**Traces to:** User Story 1
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+#### Acceptance Criteria
 
-### Key Entities *(include if feature involves data)*
+Write each one in an EARS template. All five end in THE [system] SHALL
+[response]. Uppercase SHALL.
 
-- **[Entity 1]**: [What it represents, key attributes without implementation]
-- **[Entity 2]**: [What it represents, relationships to other entities]
+1. WHEN [trigger], THE [system] SHALL [response].
+2. WHILE [state], THE [system] SHALL [response].
+3. IF [unwanted condition], THEN THE [system] SHALL [response].
+4. WHERE [feature is included], THE [system] SHALL [response].
+5. THE [system] SHALL [response].
+
+### Requirement 2: [Name]
+
+**Objective:** As a [role], I want [capability], so that [benefit].
+
+**Traces to:** User Story 2
+
+#### Acceptance Criteria
+
+1. WHEN [trigger], THE [system] SHALL [response].
+
+An unstated detail is marked, never guessed:
+
+2. WHEN [trigger], THE [system] SHALL [NEEDS CLARIFICATION: the question].
+
+### Key Entities *(include if the feature involves data)*
+
+- **[Entity]**: [What it represents, and its relationships. No implementation.]
 
 ## Success Criteria *(mandatory)*
 
-<!--
-  ACTION REQUIRED: Define measurable success criteria.
-  These must be technology-agnostic and measurable.
--->
+Every criterion names the command that checks it, or says `judgement`. A
+criterion nothing checks is a wish.
 
-### Measurable Outcomes
-
-- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
-- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
-- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
-- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+- **SC-001**: [Measurable outcome.]
+  *Verifier:* `[the command]`
+- **SC-002**: [Measurable outcome.]
+  *Verifier:* judgement — [who decides, and against what]
 
 ## Assumptions
 
-<!--
-  ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right assumptions based on reasonable defaults
-  chosen when the feature description did not specify certain details.
--->
+- [The default chosen where the input was silent, and why it is reasonable.]
 
-- [Assumption about target users, e.g., "Users have stable internet connectivity"]
-- [Assumption about scope boundaries, e.g., "Mobile support is out of scope for v1"]
-- [Assumption about data/environment, e.g., "Existing authentication system will be reused"]
-- [Dependency on existing system/service, e.g., "Requires access to the existing user profile API"]
+## Out of scope
+
+- [What this specification does not do, and where that work lives instead.]

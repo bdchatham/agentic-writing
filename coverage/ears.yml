@@ -49,14 +49,15 @@ false_positives:
         false_positives: 0
       severity: error
       severity_note: >-
-        Zero false positives across 3,777 items: not one flagged item contained
-        SHALL, so every flag was correct by the rule's definition. That is what
-        justifies error. The flag rate measures the document's house style
-        rather than the rule — one corpus document writes shall and scores 5.1%,
-        another writes must and scores 100%. The adversarial rate is the number
-        to watch: the rule's precision comes from the section scope, not from
-        the predicate, so anything that is not a criterion sitting inside the
-        criteria section floods.
+        Error rests on the section scope, not on the predicate. The predicate
+        cannot produce a false positive by construction: it flags items lacking
+        SHALL, so "zero flagged items contained SHALL" is a tautology and not
+        evidence of anything. The evidence is the adversarial rate. Rendering
+        ordinary prose as criteria flagged 2,339 of 2,798 items, 83.6%, so the
+        rule is safe only while the criteria section contains criteria and
+        floods the moment it does not. The 37.8% requirements rate measures the
+        source document's house style rather than the rule: one corpus document
+        writes shall and scores 5.1%, another writes must and scores 100%.
     Spec-AcceptanceCriteria:
       corpus_sample:
         documents: 18
@@ -65,9 +66,10 @@ false_positives:
       negative_control: >-
         Fires exactly once on a document with no criteria heading, and once on
         a document whose only heading sits inside a fenced code block.
-      severity: warning
+      severity: error
       severity_note: >-
         A document-level presence check, so a sentence corpus cannot exercise
         it directly. It stayed silent on all 18 documents once the heading was
-        present. Warning rather than error while specifications written before
-        the template still emit Spec Kit's Acceptance Scenarios paragraph.
+        present, and fires once on a document without it. Raised from warning
+        to error when the repository's only specification was converted to the
+        template, which removed the reason it had been held back.

@@ -20,6 +20,14 @@ jobs:
         with:
           reporter: github-pr-review
           fail_level: error
+          # Comment on warnings and errors, not suggestions. fail_level governs
+          # what blocks; this governs what is worth an inline comment. Adopting
+          # EARS made STE-NounCluster fire on every well-formed criterion —
+          # uppercase THE, SHALL and THEN read as nouns to the tagger — and 12
+          # of the 25 comments on one pull request were that single
+          # interaction. A rule the registry already records as approximate
+          # should inform a local run, not annotate a diff.
+          level: warning
           files: '["README.md", "docs", "anchors", "specs", ".specify/memory"]'
 
   rule-regression:
@@ -67,6 +75,11 @@ jobs:
       - name: No artifact cites a private skill or agent as an authority
         run: ./scripts/check-no-private-citations.sh
 
+      # `specify init` rewrites .specify/templates from the CLI's bundled
+      # assets, which would silently revert the spec template's deltas.
+      - name: Spec template still carries its deltas
+        run: ./scripts/check-template-deltas.sh
+
       # The coverage manifest says what each anchor actually checks. A claim
       # nobody verifies is how arc42 came to credit rules that check something
       # else, so the manifest is enforced rather than trusted.
@@ -74,10 +87,15 @@ jobs:
         run: ./scripts/check-coverage.sh
 
       # An anchor arrives with four artifacts or it does not arrive. The
-      # anchors that predate the rule are marked grandfathered, counted on
-      # every run, and the count only shrinks.
+      # anchors that predate the rule are marked grandfathered and counted.
       - name: Every admitted anchor carries its four artifacts
         run: ./scripts/check-admission.sh
+
+      # A structure rule left unscoped for consumers runs on every Markdown
+      # file they have. Three rules had already drifted between the two
+      # configurations before this gate existed.
+      - name: The consumer configuration scopes the same rules
+        run: ./scripts/check-consumer-scoping.sh
 
       - name: Every registry rule reference resolves to a rule file
         run: |
