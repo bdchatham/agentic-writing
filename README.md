@@ -98,7 +98,6 @@ anchors/registry.yaml      machine-readable anchor catalog (the single source of
 anchors/<id>.md            one page per anchor: normative summary + citation + coverage
 styles/AgenticWriting/     Vale rules, one file per checkable rule
 styles/config/vocabularies/ accept.txt and reject.txt, per Vale 3's layout
-output-styles/             Claude Code output style generated from the registry
 evals/recognition/         "does the model know this anchor" tests, per model version
 evals/fixtures/            text that must produce known findings
 scripts/                   registry -> prompt fragment, and OpenSTE vocabulary sync

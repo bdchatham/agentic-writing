@@ -35,7 +35,6 @@ Three quality goals, in priority order:
  generation               verification
      |                       |
   AGENTS.md            styles/*.yml
-  output-styles/          (Vale)
   system prompts             |
      |                       |
      +----------+------------+
