@@ -66,6 +66,11 @@ jobs:
       - name: Run per-rule golden fixtures
         run: ./evals/rules/run.sh
 
+      # The rules had fixtures and the gates did not, so a gate could reject a
+      # correct document and nothing would notice. One did.
+      - name: Run gate golden fixtures
+        run: ./evals/gates/run.sh
+
   registry-consistency:
     runs-on: ubuntu-latest
     steps:
