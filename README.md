@@ -97,7 +97,7 @@ whoever installed the toolkit.
 anchors/registry.yaml      machine-readable anchor catalog (the single source of truth)
 anchors/<id>.md            one page per anchor: normative summary + citation + coverage
 styles/AgenticWriting/     Vale rules, one file per checkable rule
-styles/Vocab/              accept.txt and reject.txt vocabularies
+styles/config/vocabularies/ accept.txt and reject.txt, per Vale 3's layout
 output-styles/             Claude Code output style generated from the registry
 evals/recognition/         "does the model know this anchor" probes, per model version
 evals/fixtures/            text that must produce known findings

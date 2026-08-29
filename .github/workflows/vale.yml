@@ -21,12 +21,15 @@ jobs:
           reporter: github-pr-review
           fail_level: error
           # Comment on warnings and errors, not suggestions. fail_level governs
-          # what blocks; this governs what is worth an inline comment. Adopting
-          # EARS made STE-NounCluster fire on every well-formed criterion —
-          # uppercase THE, SHALL and THEN read as nouns to the tagger — and 12
-          # of the 25 comments on one pull request were that single
-          # interaction. A rule the registry already records as approximate
-          # should inform a local run, not annotate a diff.
+          # what blocks; this governs what is worth an inline comment.
+          #
+          # This setting was first made for the wrong reason. STE-NounCluster
+          # fired on every well-formed EARS criterion, 12 of the 25 comments on
+          # one pull request were that one interaction, and raising the level
+          # hid the reports rather than the cause. The rule is fixed: an
+          # uppercase keyword is no longer a noun to it. The setting stands on
+          # its own ground now — a suggestion informs a local run, and a diff
+          # is not the place to argue one.
           level: warning
           files: '["README.md", "docs", "anchors", "specs", ".specify/memory"]'
 

@@ -61,7 +61,8 @@ fix it. Test recognition instead. See `evals/recognition/`.
 - One approved meaning per word **in context**. `close` as a verb is approved; `close` as
   an adjective is not. Disambiguation needs word-sense judgement.
 - Whether a term is a legitimate Technical Name in this project. Add project terms to
-  `styles/Vocab/AgenticWriting/accept.txt`, which makes the decision reviewable in Git.
+  `styles/config/vocabularies/AgenticWriting/accept.txt`, which makes the decision
+  reviewable in Git.
 - Whether a procedure step is one action. `Open the file and edit the value` passes the
   word count and breaks the rule.
 
