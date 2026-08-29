@@ -129,10 +129,9 @@ that template, each fixing something upstream leaves to the author.
 
 **Three deltas for `plan.md` used to sit in this table** — Boundary Commitments,
 Revalidation Triggers, Existing Architecture Analysis. No plan template ever carried
-them. The gate reads `spec-template.md` only, so nothing caught the claim, and the
-plan template was upstream and unmodified from the day it arrived. The claim is
-withdrawn rather than made true after the fact: write those sections into a plan
-template and add them here in the same change, or leave the gap stated.
+them. The gate reads `spec-template.md` only, so nothing caught the claim. This
+table drops the three rather than making them true after the fact. To restore one,
+write the section into a plan template and add the row back in the same change.
 
 **Every success criterion names its verifier.** `SC-002 … Verifier: gorelease in CI`.
 A criterion nothing checks says `judgement`. An unmarked criterion is not honest.
