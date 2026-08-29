@@ -270,7 +270,7 @@ VOCAB
     say "  adding the fetched paths to .gitignore"
     append "$root/.gitignore" '
 # agentic-writing fetches the rules into these. Anything else under .vale/ is
-# yours, including .vale/vocab/Local/accept.txt.
+# yours, including .vale/vocab/accept.txt.
 .vale/styles/
 .vale/src/
 '

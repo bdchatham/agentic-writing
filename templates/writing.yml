@@ -2,7 +2,12 @@
 # copying one, so a fix to the check reaches this repository when you raise the
 # pin below, instead of needing a pull request here.
 #
-# The pin is a real action ref, so Dependabot raises it like any other.
+# NOTHING RAISES THE PIN FOR YOU. This line used to say Dependabot would, which
+# is true only in a repository that already has a github-actions entry in
+# .github/dependabot.yml. The first repository to install this had none, so the
+# sentence described a mechanism that was not wired up and the pin would have
+# gone stale in silence. Raise it deliberately, and expect new findings when you
+# do.
 name: writing
 
 on:

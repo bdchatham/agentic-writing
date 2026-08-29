@@ -60,9 +60,34 @@ else
   exit 1
 fi
 
+# A NAMED PATH IS FILTERED TOO. Vale treats a path that does not exist as a fatal
+# argument error, so the default list is built from what is there. The caller's
+# own list used to skip that filter, which made naming a tree you plan to have —
+# docs/, designs/ — a hard failure rather than a no-op. Naming one is now safe
+# and the skip is reported, so a typo is visible without breaking the run.
 if [ -n "$GIVEN" ]; then
-  files="$GIVEN"
-  echo "Linting the caller's paths: $files" >&2
+  files="$(GIVEN="$GIVEN" python3 - <<'PYEOF'
+import json, os, sys
+try:
+    want = json.loads(os.environ['GIVEN'])
+except json.JSONDecodeError as e:
+    sys.stderr.write(f"paths input is not JSON: {e}\n")
+    sys.exit(2)
+if not isinstance(want, list) or not all(isinstance(x, str) for x in want):
+    sys.stderr.write("paths input must be a JSON array of strings\n")
+    sys.exit(2)
+have = [p for p in want if os.path.exists(p)]
+for p in want:
+    if p not in have:
+        sys.stderr.write(f"  skipping '{p}': not in this repository yet\n")
+print(json.dumps(have, separators=(',', ':')) if have else '')
+PYEOF
+)" || exit 2
+  if [ -z "$files" ]; then
+    echo "none of the caller's paths exist; nothing to lint" >&2
+  else
+    echo "Linting the caller's paths: $files" >&2
+  fi
 else
   found=""
   for p in README.md docs specs tickets designs; do

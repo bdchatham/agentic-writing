@@ -98,6 +98,15 @@ mkdir -p .vale/src
 files="$(./.vale/src/scripts/consumer-lint-setup.sh .vale/src 2>/dev/null)"
 check "path selection skips what does not exist" '["README.md","docs","specs"]' "$files"
 
+# The caller's own list is filtered too. Naming a tree the repository plans to
+# have used to be a fatal Vale argument error rather than a no-op.
+given="$(./.vale/src/scripts/consumer-lint-setup.sh .vale/src \
+         '["README.md","docs","designs"]' 2>/dev/null)"
+check "a named path that does not exist is skipped" '["README.md","docs"]' "$given"
+
+./.vale/src/scripts/consumer-lint-setup.sh .vale/src 'not json' >/dev/null 2>&1
+check "a malformed paths input fails loudly" "2" "$?"
+
 actual="$(vale --no-global --no-exit --output=line --glob='!.vale/**' \
           README.md docs specs 2>&1 | sort)"
 expected="$(cat "$root/evals/consumer/expected.txt")"
