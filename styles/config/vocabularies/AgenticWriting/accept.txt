@@ -18,3 +18,31 @@ idempotent
 [Ee]xplainability
 [Rr]edistributable
 wordset
+# Proper nouns: people, tools and named methods this repository cites.
+Bogard
+Cockburn
+Comartin
+Connextra
+Excalidraw
+Kiro
+Nygard
+Structurizr
+Tengo
+[Aa]gentic
+# Technical terms the general dictionary lacks.
+[Aa]rity
+[Aa]uditable
+[Dd]iffable
+[Ll]intable
+[Ll]ookbehind
+[Pp]repend
+[Pp]repends
+[Pp]repending
+[Rr]eframes
+[Uu]nprobed
+[Vv]endor
+[Vv]endored
+[Vv]endoring
+[Cc]onfig
+[Ll]inter'?s?
+[Tt]raceback

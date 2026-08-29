@@ -21,9 +21,8 @@ term is a contract. Fame is not evidence.
 ### III. The gate is the claim
 
 A rule no command checks is a wish. Every convention states whether a gate checks it,
-and says so plainly when none does. A gate is never weakened to make a check pass: a
-rule that cannot be expressed gets deleted, and the constraint is recorded as
-uncheckable.
+and says so plainly when none does. Never weaken a gate to make a check pass. If Vale
+cannot express a rule, delete it and record the constraint as uncheckable.
 
 ### IV. Push, not pull
 
@@ -62,7 +61,7 @@ surprising output as the anchor failing rather than the model disagreeing.
 | Property-Based Testing | invariants over generated inputs | finding the invariant |
 | Conventional Commits | commit subject | whether the scope names the right component |
 | BLUF | conclusion first | whether that sentence is the bottom line |
-| Diátaxis | one page, one mode | whether the mode was chosen well |
+| Diátaxis | one page, one mode | whether the author chose the mode well |
 | Effective Go | Go idiom | modules and generics — it predates both |
 | Go Code Review Comments | review-time Go checklist | design-level structure |
 | Google Go Style Guide | normative Go rulings | this repository's own patterns |
@@ -77,24 +76,25 @@ dependency direction between bounded contexts. Do not impose it inside one.
 
 These have no reliable public prior. Naming them is not enough.
 
-**Writing.** Write in Simplified Technical English (ASD-STE100): approved words in one
-meaning only, active voice, one instruction per sentence, procedural sentences under 20
-words and descriptive under 25, noun clusters of at most 3 words. Keep code, commands,
+**Writing.** Write in Simplified Technical English (ASD-STE100). Use approved words in
+one meaning only, the active voice, and one instruction per sentence. Keep a procedural
+sentence under 20 words and a descriptive one under 25. Keep a noun cluster to at most
+three words. Keep code, commands,
 identifiers, and quoted output verbatim.
 
 **Code structure.** Code reads as a legible sequence of named steps a new engineer
 follows top to bottom with no narrator. The method body is the table of contents; step
-names carry the *what*; you drill into a step only for its detail. A readability
-refactor changes structure only, and the unchanged tests still passing is the proof.
+names carry the *what*; you drill into a step only for its detail. A refactor for
+readability changes structure only, and the unchanged tests still passing is the proof.
 
 **Comments.** A comment states the present. Never history, never why-removed — that
 belongs in the commit. Put it at the top, as package, file, or type documentation.
 
 **Errors are interface.** Every error condition is part of the public contract.
 
-**Two-way doors only.** A one-way door needs explicit human approval before you
-finalize it: a persisted schema, a public API contract, a wire format, or anything
-another system comes to depend on.
+**Two-way doors only.** A one-way door needs explicit human approval before you finalize
+it. A one-way door is a persisted schema, a public API contract, a wire format, or
+anything another system comes to depend on.
 
 ## Writing modes
 
@@ -124,14 +124,14 @@ apply, each fixing something the upstream template leaves to the author.
 | EARS with a named actor — `THE Controller SHALL` | each requirement | `System MUST` names no actor |
 | `## Boundary Commitments` — Owns, Out of Boundary, Allowed Dependencies | `plan.md` | Makes the dependency rule reviewable |
 | `### Revalidation Triggers` | `plan.md` | The escalation path, agreed before anyone hits it |
-| `### Existing Architecture Analysis` | `plan.md` | Forces the as-is to be read before the to-be is written |
+| `### Existing Architecture Analysis` | `plan.md` | Forces the author to read the as-is before writing the to-be |
 
 **Every success criterion names its verifier.** `SC-002 … Verifier: gorelease in CI`.
 A criterion nothing checks says `judgement`. An unmarked criterion is not honest.
 
 **Every user story carries four things** — priority, why this priority, an Independent
-Test, and acceptance scenarios. A ticket is generated from them and cannot invent what
-the story omitted.
+Test, and acceptance scenarios. The generator builds a ticket from them, and it cannot
+invent what the story omitted.
 
 **Every task carries five** — a test-first instruction, an `Observable:` check,
 `_Requirements:_` upward, `_Boundary:_`, and `_Depends:_`.
@@ -162,20 +162,23 @@ An anchor arrives with four artifacts or it does not arrive. Naming a standard i
 and a catalogue that grows by naming becomes a list of things nobody checks.
 
 1. **A registry entry** — steward, licence, the probe, and what the anchor does not cover.
-2. **A fixture per rule** — an isolated golden file, so the rule cannot die silently.
+2. **A fixture per rule** — its own configuration, its own input, and a non-empty
+   golden file, so the rule cannot die silently. A directory missing a piece fails;
+   it is never skipped.
 3. **A coverage row** — which topics of the standard the rules reach, and which they do
    not. `false` is an expected answer.
 4. **A false-positive count** — measured over a corpus before any rule reaches `error`.
    A rule that fires often starts at `warning`, and the number says which.
 
-The anchors admitted before this rule are marked `grandfathered` in the registry. They
-are exempt, they are counted, and the count only shrinks. An anchor marked `admitted`
-must satisfy all four, and CI enforces it.
+The registry marks every anchor that predates this rule `grandfathered`, and
+`anchors/grandfathered.txt` lists them. They are exempt, and the gate counts them. The
+list only shrinks. CI compares it against `main` and fails on a line that was not there
+before. An anchor marked `admitted` must satisfy all four, and CI enforces it.
 
-This is what keeps the slope from being a slope: the next anchor is bounded by the same
-four artifacts, or it does not go in.
+This is what keeps the slope from being a slope. The same four artifacts bound the next
+anchor, or it does not go in.
 
 An amendment states what changed and why, and bumps the version below. Deleting a
 principle requires the same ceremony as adding one.
 
-**Version**: 1.1.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28
+**Version**: 1.1.1 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28

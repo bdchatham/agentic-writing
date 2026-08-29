@@ -28,6 +28,35 @@ Named once. Not restated below.
 | Conventional Commits | commit subject | whether the scope names the right component |
 <!-- vale on -->
 
+## Glossary
+
+Every term this specification uses in a specific sense.
+
+- **Anchor**: a public standard the model already holds, named rather than restated,
+  and only after a probe records that it resolves.
+- **Stated rule**: a local rule, or a term with a weak prior, written out in full
+  because naming it would not carry it. The counterpart of an anchor.
+- **The contract**: the single always-loaded file holding the anchors and the stated
+  rules, at `.specify/memory/constitution.md`. Where this specification says "the
+  contract" it means that file, never the category above.
+- **Gate**: a command that measures an artifact and can block a merge.
+- **Expert**: a persona addressable by role name, applying judgement a gate cannot.
+- **Probe**: the deterministic multiple-choice test of whether a model resolves an
+  anchor, scored on recognition, application, differentiation and consistency.
+- **Verdict**: a probe result recorded with the model identifier and the date.
+- **Admitted**: an anchor carrying all four admission artifacts.
+- **Grandfathered**: an anchor predating the admission rule, exempt and counted.
+- **Writing mode**: a document type with a structure contract, selected by path.
+
+## Boundary Context
+
+- **Sits within**: this repository, which is public.
+- **Owns**: the contract, the evidence behind each anchor, the gates, and the rule
+  that admits a new anchor.
+- **Does not own**: organisation-specific profiles, operational procedures, and the
+  skills built on them. Those stay in the organisation's own repository and cite the
+  public anchors from there.
+
 ## Why this exists
 
 V1 is a single-author library. Measured on 2026-08-19:
@@ -193,88 +222,120 @@ registry records a distinct verdict per model, and that a below-threshold verdic
 
 ## Requirements
 
-### The contract
+Each requirement carries its own acceptance criteria, so no requirement is an orphan
+and no criterion floats free of a requirement. The `FR-nnn` labels are stable
+identifiers; the numbering now runs in order.
 
-**FR-001** The repository MUST hold exactly one always-loaded contract. A convention
-absent from it MUST NOT be treated as adopted.
+### Requirement 1: One always-loaded contract
 
-**FR-002** WHERE a convention names a public standard with a recorded passing verdict,
-the contract MUST name the anchor and MUST NOT restate the standard.
+**Objective:** As an engineer new to this repository, I want its conventions already
+in my context, so that I follow them without setup.
 
-**FR-003** WHERE a convention has no public standard, or no passing verdict, the
-contract MUST state it in full.
+**Traces to:** User Story 1
 
-**FR-004** The contract MUST state, for each convention, whether a gate checks it.
+#### Acceptance Criteria
 
-**FR-005** IF a convention cannot be checked, THEN the contract MUST say so rather than
-leave the reader to assume a check exists.
+1. **FR-001** THE repository SHALL hold exactly one always-loaded contract, and a
+   convention absent from it SHALL NOT count as adopted.
+2. **FR-002** WHERE a probe records that a model resolves a public standard, THE
+   author SHALL express that convention as an anchor.
+3. **FR-003** WHERE a convention has no public standard, or no passing verdict, THE
+   contract SHALL carry it as a stated rule, not an anchor.
+4. **FR-004** THE contract SHALL state, for each convention, whether a gate checks it.
+5. **FR-005** IF no gate checks a convention, THEN THE contract SHALL say so rather
+   than leave the reader to assume a check exists.
 
-### Evidence
+### Requirement 2: Evidence behind every anchor
 
-**FR-006** The registry MUST record, per anchor: steward, licence, redistributability,
-the probe, and every verdict with its model identifier and date.
+**Objective:** As a reviewer who disagrees, I want the chain from rule to anchor to
+verdict, so that I argue the standard, not taste.
 
-**FR-007** WHEN an author adds an anchor to the contract, the author MUST record a
-probe verdict first.
+**Traces to:** User Story 2
 
-**FR-008** The probe MUST score recognition, application, differentiation, and
-consistency.
+#### Acceptance Criteria
 
-**FR-009** The probe MUST use deterministic multiple-choice questions, so that no model
-scores its own recall.
+1. **FR-006** THE registry SHALL record, per anchor, the steward, the licence, the
+   redistribution terms, the probe, and every verdict with its model and date.
+2. **FR-007** WHEN an author adds an anchor to the contract, THE author SHALL record a
+   probe verdict first.
+3. **FR-008** THE probe SHALL score recognition, application, differentiation and
+   consistency.
+4. **FR-009** THE probe SHALL use deterministic multiple-choice questions, so that no
+   model scores its own recall.
+5. **FR-010** IF an anchor scores below the partial threshold, THEN THE contract SHALL
+   keep the stated text alongside the anchor.
+6. **FR-011** IF an anchor scores below the failing threshold, THEN THE author SHALL
+   remove it from the contract and state the rule instead.
 
-**FR-010** IF an anchor scores below the partial threshold, THEN the contract MUST keep
-the stated text alongside the anchor.
+### Requirement 3: Gates that cannot be quietly weakened
 
-**FR-011** IF an anchor scores below the failing threshold, THEN the author MUST remove
-it from the contract and state the rule instead.
+**Objective:** As an author of a blocked document, I want each finding to name its
+rule and each rule its clause, so gates stay arguable.
 
-### Gates
+**Traces to:** User Story 3
 
-**FR-012** Every gate finding MUST name a rule, and every rule MUST name the clause it
-enforces.
+#### Acceptance Criteria
 
-**FR-013** A gate MUST NOT be weakened to make a check pass. IF a rule cannot be
-expressed, THEN it MUST be deleted and the constraint recorded as uncheckable.
+1. **FR-012** Every gate finding SHALL name a rule, and every rule SHALL name the
+   clause it enforces.
+2. **FR-013** THE author SHALL NOT weaken a gate to make a check pass. IF Vale cannot
+   express a rule, THEN THE author SHALL delete it and record the constraint as
+   uncheckable.
+3. **FR-014** THE gate SHALL run in continuous integration on every change to a
+   governed artifact.
 
-**FR-014** The gate MUST run in continuous integration on every change to a governed
-artifact.
+### Requirement 4: Knowledge lives in the contract, not in a skill
 
-### Experts and skills
+**Objective:** As a teammate who installed nothing, I want conventions to reach me
+through the contract and gates, so one I never invoke still applies.
 
-**FR-015** An expert MUST be addressable by role name and MUST NOT require a remembered
-trigger phrase.
+**Traces to:** User Story 1
 
-**FR-016** A skill MUST exist only where a procedure has side effects outside the
-repository. Knowledge MUST live in the contract.
+#### Acceptance Criteria
 
-**FR-017** WHEN an author proposes a new skill, the author MUST first state why the
-convention cannot live in the contract.
+1. **FR-015** An expert SHALL answer to a role name and SHALL NOT need a remembered
+   trigger phrase.
+2. **FR-016** A skill SHALL exist only where a procedure has side effects outside the
+   repository, and knowledge SHALL live in the contract.
+3. **FR-017** WHEN an author proposes a new skill, THE author SHALL first state why the
+   convention cannot live in the contract.
 
-### The tracker
+### Requirement 5: The licensing boundary
 
-**FR-020** Linear is the tracker. WHERE a phase turns work units into tracker issues,
-that path MUST target Linear.
+**Objective:** As a reader of this public repository, I want every artifact
+publishable, so that nobody has to withdraw one later.
 
-**FR-021** The repository MUST NOT ship a GitHub-issue path. Spec Kit's own
-`speckit-taskstoissues` targets GitHub, so it is removed from the vendored set rather
-than left installed and unused.
+**Traces to:** User Story 2
 
-### Licensing
+#### Acceptance Criteria
 
-**FR-018** This repository is public. Every artifact in it MUST be publishable: no
-proprietary standard text, no controlled dictionary, and no organisation-specific
-operational detail.
+1. **FR-018** Every artifact in this repository SHALL be publishable: no proprietary
+   standard text, no controlled dictionary, and no organisation-specific operational
+   detail.
+2. **FR-019** IF a convention is specific to one organisation's systems, THEN it SHALL
+   stay in that organisation's repository and cite the anchor.
 
-**FR-019** IF a convention is specific to one organisation's systems, THEN it MUST stay
-in that organisation's own repository and cite the public anchor from there.
+### Requirement 6: The tracker
+
+**Objective:** As an engineer picking up filed work, I want issues in one tracker, so
+that the work has a single home.
+
+**Traces to:** User Story 1
+
+#### Acceptance Criteria
+
+1. **FR-020** Linear SHALL be the tracker. WHERE a phase turns work units into tracker
+   issues, that path SHALL target Linear.
+2. **FR-021** THE repository SHALL NOT ship a GitHub-issue path. Spec Kit's own
+   `speckit-taskstoissues` targets GitHub, so this repository drops it from the
+   vendored set rather than leaving it installed and unused.
 
 ## Success Criteria
 
 Each criterion names the command that checks it, or the word `judgement`.
 
 **SC-001** One engineer who is not the author uses the contract on work the author did
-not assign, within 60 days of the first release.
+not assign, within 60 days of release.
 *Verifier:* authorship of a commit or pull request in a consuming repository. This is
 the criterion V2 exists to satisfy; the others are subordinate to it.
 

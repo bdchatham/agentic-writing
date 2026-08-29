@@ -20,6 +20,17 @@ jobs:
         with:
           reporter: github-pr-review
           fail_level: error
+          # Comment on warnings and errors, not suggestions. fail_level governs
+          # what blocks; this governs what is worth an inline comment.
+          #
+          # This setting was first made for the wrong reason. STE-NounCluster
+          # fired on every well-formed EARS criterion, 12 of the 25 comments on
+          # one pull request were that one interaction, and raising the level
+          # hid the reports rather than the cause. The rule is fixed: an
+          # uppercase keyword is no longer a noun to it. The setting stands on
+          # its own ground now — a suggestion informs a local run, and a diff
+          # is not the place to argue one.
+          level: warning
           files: '["README.md", "docs", "anchors", "specs", ".specify/memory"]'
 
   rule-regression:
@@ -59,6 +70,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # The admission gate compares anchors/grandfathered.txt against main to
+      # hold the list monotonic. A shallow clone has no main to compare with,
+      # and the gate says so rather than passing on one arm.
+      - name: Fetch main for the monotonicity comparison
+        run: git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -79,10 +97,15 @@ jobs:
         run: ./scripts/check-coverage.sh
 
       # An anchor arrives with four artifacts or it does not arrive. The
-      # anchors that predate the rule are marked grandfathered, counted on
-      # every run, and the count only shrinks.
+      # anchors that predate the rule are marked grandfathered and counted.
       - name: Every admitted anchor carries its four artifacts
         run: ./scripts/check-admission.sh
+
+      # A structure rule left unscoped for consumers runs on every Markdown
+      # file they have. Three rules had already drifted between the two
+      # configurations before this gate existed.
+      - name: The consumer configuration scopes the same rules
+        run: ./scripts/check-consumer-scoping.sh
 
       - name: Every registry rule reference resolves to a rule file
         run: |
