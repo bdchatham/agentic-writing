@@ -286,6 +286,8 @@ VOCAB
   say "Spec Kit is separate and this script does not install it. If this"
   say "repository writes specifications, it also needs a constitution:"
   say "  specify init --here --integration claude"
+  say ""
+  say "This repository vendors the spec template and nothing else of Spec Kit's."
 }
 
 while [ $# -gt 0 ]; do

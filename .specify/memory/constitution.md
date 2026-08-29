@@ -114,8 +114,8 @@ compliant.
 
 ## The spec contract
 
-A specification uses Spec Kit's filenames, CLI, and vendored templates. Seven deltas
-apply, each fixing something the upstream template leaves to the author.
+A specification uses Spec Kit's filenames and its spec template. Five deltas apply to
+that template, each fixing something upstream leaves to the author.
 
 | Delta | In | Fixes |
 |---|---|---|
@@ -124,9 +124,15 @@ apply, each fixing something the upstream template leaves to the author.
 | `## Boundary Context` | `spec.md` | A spec with no stated boundary grows while open |
 | `**Objective:** As a <role>, I want <X>, so that <Y>` | each requirement | Names the beneficiary; prevents an orphan requirement |
 | EARS with a named actor — `THE Controller SHALL` | each requirement | `System MUST` names no actor |
-| `## Boundary Commitments` — Owns, Out of Boundary, Allowed Dependencies | `plan.md` | Makes the dependency rule reviewable |
-| `### Revalidation Triggers` | `plan.md` | The escalation path, agreed before anyone hits it |
-| `### Existing Architecture Analysis` | `plan.md` | Forces the author to read the as-is before writing the to-be |
+
+`scripts/check-template-deltas.sh` asserts all five, and CI runs it.
+
+**Three deltas for `plan.md` used to sit in this table** — Boundary Commitments,
+Revalidation Triggers, Existing Architecture Analysis. No plan template ever carried
+them. The gate reads `spec-template.md` only, so nothing caught the claim, and the
+plan template was upstream and unmodified from the day it arrived. The claim is
+withdrawn rather than made true after the fact: write those sections into a plan
+template and add them here in the same change, or leave the gap stated.
 
 **Every success criterion names its verifier.** `SC-002 … Verifier: gorelease in CI`.
 A criterion nothing checks says `judgement`. An unmarked criterion is not honest.
@@ -189,4 +195,4 @@ anchor, or it does not go in.
 An amendment states what changed and why, and bumps the version below. Deleting a
 principle requires the same ceremony as adding one.
 
-**Version**: 1.2.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28
+**Version**: 1.3.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28

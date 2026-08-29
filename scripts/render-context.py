@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Render generated consumers from anchors/registry.yaml.
 
-The registry is the single source of truth. AGENTS.md, CLAUDE.md, and the Claude
-Code output style are generated. Never hand-edit a generated file.
+The registry is the single source of truth. AGENTS.md is generated from it. Never
+hand-edit a generated file.
 
 Usage:
     python3 scripts/render-context.py --target agents  > AGENTS.md
-    python3 scripts/render-context.py --target style   > output-styles/agentic-writing.md
     python3 scripts/render-context.py --target table   # markdown table for docs/
+
+A `style` target used to appear here and argparse never accepted it, so the file it
+named was generated once and then drifted with nothing to regenerate it.
 """
 import argparse
 import pathlib
