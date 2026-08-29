@@ -54,7 +54,7 @@ derived from it, so the generation hint and the verification rule cannot drift a
 |---|---|
 | Compress convention into context | Name a public standard (a semantic anchor) |
 | Prove the artifact meets the convention | Vale rules that cite the standard |
-| Prove the anchor still resolves | Recognition probes, per model version |
+| Prove the anchor still resolves | Recognition tests, per model version |
 | Prove the rules still work | Fixture corpus with expected findings |
 | Prevent drift between the two sides | Generate the prompt from the registry |
 | Publish an artifact without drift | Build it with a script, from git and the canonical style |
@@ -72,13 +72,13 @@ closer to correct, which is worth having, and which you MUST NOT depend on.
 
 | Block | Responsibility |
 |---|---|
-| `anchors/registry.yaml` | Declares anchors, coverage, and probes |
+| `anchors/registry.yaml` | Declares anchors, coverage, and recognition tests |
 | `anchors/<id>.md` | Human-readable normative summary and citation |
 | `styles/AgenticWriting/` | One Vale rule per checkable constraint |
 | `styles/Vocab/` | Project Technical Names, reviewable in Git |
 | `scripts/render-context.py` | Registry to generated context files |
 | `scripts/sync-openste.sh` | MIT wordset to approved-word rule |
-| `evals/` | Recognition probes and rule regression fixtures |
+| `evals/` | Recognition tests and rule regression fixtures |
 
 ## 9. Decisions
 
@@ -104,5 +104,6 @@ See `docs/adr/`.
 
 **Anchor** — a well-defined public term used as a reference point in model context.
 **Coverage** — how much of a standard the verifier can check: full, partial, or none.
-**Probe** — the prompt that tests whether a model resolves an anchor.
+**Recognition test** — the open question that tests whether a model resolves an
+anchor, and the verdict it produces.
 **Ensure** — a check that recomputes its verdict from the artifact, with no memory.

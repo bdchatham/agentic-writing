@@ -14,9 +14,9 @@ or a term with a weak prior: state it in full. Anything that is neither gets del
 
 ### II. Evidence before anchor
 
-Naming a standard is a bet on its prior. A term becomes an anchor only after a probe
-records that a model resolves it, with the model identifier and the date. An unprobed
-term is a contract. Fame is not evidence.
+Naming a standard is a bet on its prior. A term becomes an anchor only after a
+recognition test records that a model resolves it, with the model identifier and the
+date. An untested term is a stated rule. Fame is not evidence.
 
 ### III. The gate is the claim
 
@@ -42,8 +42,10 @@ carries what it does **not** cover, and a partial verdict keeps its stated text 
 Name one from this table. **Naming an anchor absent from it is forbidden** — a
 confabulated method name reads authoritative and costs more than plain prose.
 
-**No anchor here carries a recorded probe verdict yet.** Until one does, treat a
-surprising output as the anchor failing rather than the model disagreeing.
+**No anchor here carries a recorded verdict yet, and the suite that would produce one
+is not built.** `evals/recognition/README.md` states the method and nothing runs it.
+Until a verdict exists, treat a surprising output as the anchor failing rather than the
+model disagreeing.
 
 | Anchor | Governs | Does not cover |
 |---|---|---|
@@ -156,12 +158,18 @@ repository and cites the public anchor from there.
 **No artifact here names a private skill or agent as an authority.** If a rule matters,
 state the rule. A citation a reader cannot follow is not a citation. CI enforces this.
 
+**A success criterion names a verifier that runs, or says that none does.** Write the
+path in backticks, or write `not built — <what is missing>` or `judgement — <who
+decides and how>`. A criterion citing a check nobody built reads exactly like one that
+passes, which is the failure this repository exists to stop. CI enforces this.
+
 ### Admitting an anchor
 
 An anchor arrives with four artifacts or it does not arrive. Naming a standard is cheap,
 and a catalogue that grows by naming becomes a list of things nobody checks.
 
-1. **A registry entry** — steward, licence, the probe, and what the anchor does not cover.
+1. **A registry entry** — steward, licence, the recognition test, and what the anchor
+   does not cover.
 2. **A fixture per rule** — its own configuration, its own input, and a non-empty
    golden file, so the rule cannot die silently. A directory missing a piece fails;
    it is never skipped.
@@ -181,4 +189,4 @@ anchor, or it does not go in.
 An amendment states what changed and why, and bumps the version below. Deleting a
 principle requires the same ceremony as adding one.
 
-**Version**: 1.1.1 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28
+**Version**: 1.2.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28

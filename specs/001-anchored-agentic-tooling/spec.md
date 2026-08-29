@@ -33,7 +33,7 @@ Named once. Not restated below.
 Every term this specification uses in a specific sense.
 
 - **Anchor**: a public standard the model already holds, named rather than restated,
-  and only after a probe records that it resolves.
+  and only after a recognition test records that it resolves.
 - **Stated rule**: a local rule, or a term with a weak prior, written out in full
   because naming it would not carry it. The counterpart of an anchor.
 - **The contract**: the single always-loaded file holding the anchors and the stated
@@ -41,9 +41,11 @@ Every term this specification uses in a specific sense.
   contract" it means that file, never the category above.
 - **Gate**: a command that measures an artifact and can block a merge.
 - **Expert**: a persona addressable by role name, applying judgement a gate cannot.
-- **Probe**: the deterministic multiple-choice test of whether a model resolves an
-  anchor, scored on recognition, application, differentiation and consistency.
-- **Verdict**: a probe result recorded with the model identifier and the date.
+- **Recognition test**: an open question asking what a model associates with an anchor
+  name, scored on recognition, accuracy, depth and specificity. The method is in
+  `evals/recognition/README.md`. No suite runs it yet.
+- **Verdict**: a recognition-test result, one of strong, partial or absent, recorded
+  with the model identifier, the date, and the answer it was scored from.
 - **Admitted**: an anchor carrying all four admission artifacts.
 - **Grandfathered**: an anchor predating the admission rule, exempt and counted.
 - **Writing mode**: a document type with a structure contract, selected by path.
@@ -111,7 +113,7 @@ Four channels. Each convention belongs to exactly one.
 | Channel | How it reaches an engineer | Holds |
 |---|---|---|
 | **Contract** | Always loaded, no invocation | The anchors, and the local rules that have no prior |
-| **Evidence** | Read when a claim is questioned | Per anchor: steward, licence, probe, verdict, date |
+| **Evidence** | Read when a claim is questioned | Per anchor: steward, licence, the question, verdict, date |
 | **Gate** | Blocks a merge | The checkable subset, as lint rules in CI |
 | **Expert** | Named by role | The persona that applies judgement a gate cannot |
 
@@ -150,7 +152,7 @@ slash command was invoked.
 ### User Story 2 - A reviewer can tell why a rule exists (Priority: P2)
 
 A reviewer disagrees with a finding. They follow the rule to the anchor, the anchor to
-its steward and licence, and the anchor to its probe verdict and the date it was taken.
+its steward and licence, and the anchor to its verdict and the date it was taken.
 They can then argue about the standard rather than about taste.
 
 **Why this priority**: An unexplained convention is the failure V1's README already
@@ -158,13 +160,13 @@ names — a hand-tuned prompt cannot explain itself. Without this, V2 is a diffe
 of unexplainable preferences.
 
 **Independent Test**: Pick any finding the gate reports. Confirm the chain from rule to
-anchor to steward to probe verdict resolves with no missing link.
+anchor to steward to verdict resolves with no missing link.
 
 **Acceptance Scenarios**:
 
 1. **Given** a reported finding, **When** a reviewer looks up its rule, **Then** the
    rule names the anchor and the anchor resolves to a registry entry with a steward, a
-   licence, and a probe verdict.
+   licence, and a verdict.
 2. **Given** an anchor with no recorded verdict, **When** a reviewer reads the registry,
    **Then** the absence is stated rather than implied.
 
@@ -191,19 +193,19 @@ change the document's meaning.
 
 ### User Story 4 - The contract survives a model upgrade (Priority: P3)
 
-A new model becomes the default. The probe suite runs against it. An anchor whose
+A new model becomes the default. The recognition suite runs against it. An anchor whose
 recognition drops is demoted to stated text before it silently degrades a review.
 
 **Why this priority**: Silent degradation is the failure mode that makes a prompt-only
 approach untrustworthy. It is also the failure a gate cannot catch, because the gate
 checks the artifact and not the model.
 
-**Independent Test**: Run the probe suite against two different models. Confirm the
+**Independent Test**: Run the recognition suite against two different models. Confirm the
 registry records a distinct verdict per model, and that a below-threshold verdict blocks.
 
 **Acceptance Scenarios**:
 
-1. **Given** a new default model, **When** the probe suite runs, **Then** every anchor
+1. **Given** a new default model, **When** the recognition suite runs, **Then** every anchor
    receives a scored verdict recorded with the model identifier and the date.
 2. **Given** an anchor scoring below the threshold, **When** the gate runs, **Then** it
    fails until the registry records the lower verdict.
@@ -211,7 +213,7 @@ registry records a distinct verdict per model, and that a below-threshold verdic
 ### Edge Cases
 
 - **An anchor that is famous but sparse in training data.** Fame is not evidence. The
-  probe decides.
+  the recognition test decides.
 - **A local rule that resembles a public standard.** It stays local, because a later
   upstream change would silently move the rule.
 - **A convention with no verifier.** It is stated in the contract and listed as
@@ -237,7 +239,7 @@ in my context, so that I follow them without setup.
 
 1. **FR-001** THE repository SHALL hold exactly one always-loaded contract, and a
    convention absent from it SHALL NOT count as adopted.
-2. **FR-002** WHERE a probe records that a model resolves a public standard, THE
+2. **FR-002** WHERE a recognition test records that a model resolves a public standard, THE
    author SHALL express that convention as an anchor.
 3. **FR-003** WHERE a convention has no public standard, or no passing verdict, THE
    contract SHALL carry it as a stated rule, not an anchor.
@@ -255,13 +257,13 @@ verdict, so that I argue the standard, not taste.
 #### Acceptance Criteria
 
 1. **FR-006** THE registry SHALL record, per anchor, the steward, the licence, the
-   redistribution terms, the probe, and every verdict with its model and date.
+   redistribution terms, the question, and every verdict with its model and date.
 2. **FR-007** WHEN an author adds an anchor to the contract, THE author SHALL record a
-   probe verdict first.
-3. **FR-008** THE probe SHALL score recognition, application, differentiation and
-   consistency.
-4. **FR-009** THE probe SHALL use deterministic multiple-choice questions, so that no
-   model scores its own recall.
+   verdict first.
+3. **FR-008** THE recognition test SHALL score recognition, accuracy, depth and
+   specificity.
+4. **FR-009** THE registry SHALL store the answer beside the verdict, so that a reader
+   who disagrees can re-score it.
 5. **FR-010** IF an anchor scores below the partial threshold, THEN THE contract SHALL
    keep the stated text alongside the anchor.
 6. **FR-011** IF an anchor scores below the failing threshold, THEN THE author SHALL
@@ -336,25 +338,38 @@ Each criterion names the command that checks it, or the word `judgement`.
 
 **SC-001** One engineer who is not the author uses the contract on work the author did
 not assign, within 60 days of release.
-*Verifier:* authorship of a commit or pull request in a consuming repository. This is
-the criterion V2 exists to satisfy; the others are subordinate to it.
+*Verifier:* judgement — a reader checks the commit and pull-request history of a
+consuming repository for an author other than this one. No gate can see adoption. This
+is the criterion V2 exists to satisfy; the others are subordinate to it.
 
-**SC-002** Every anchor named in the contract resolves to a registry entry. A dangling
-name fails the build.
-*Verifier:* the registry consistency job.
+**SC-002** Every anchor named in the contract resolves to a registry entry, or appears
+in `anchors/unregistered.txt` as a recorded debt. A name in neither fails the build.
+*Verifier:* `scripts/check-contract-anchors.sh`
+
+The criterion is not yet met. The contract names 19 anchors and the registry holds 7 of
+them; the other 12 are listed as debt. That list only shrinks, and a name leaves it by
+earning a registry entry with the four admission artifacts.
 
 **SC-003** Every registry entry carries a verdict for the current default model.
-*Verifier:* the probe suite.
+*Verifier:* not built — no recognition suite exists. `evals/recognition/README.md`
+holds the method and nothing runs it.
+
+Zero of the 8 entries carry a verdict. Until one does, every claim in this repository
+about how well a model resolves an anchor is untested.
 
 **SC-004** The gate reports zero errors on every governed artifact in this repository.
 *Verifier:* `vale README.md docs/ anchors/ specs/`
 
 **SC-005** The contract fits in a single file a person reads in under five minutes.
-*Verifier:* line count under 250.
+*Verifier:* `scripts/check-artifact-length.sh`
 
-**SC-006** No knowledge artifact in the repository exceeds 150 lines. A longer one is
-evidence that a standard is being restated.
-*Verifier:* a line-count check in CI.
+**SC-006** No anchor page exceeds 150 lines. A longer one is evidence that it restates
+the standard instead of citing it, which NOTICE.md forbids.
+*Verifier:* `scripts/check-artifact-length.sh`
+
+The limit covers `anchors/*.md`. It used to read "no knowledge artifact", which swept in
+the design documents at 231 and 194 lines. A design document argues a position; holding
+it to a citation-length limit measures the wrong thing.
 
 **SC-007** A reader can trace any finding to a clause without asking the author.
 *Verifier:* judgement — a reviewer attempts it on three findings and reports.
@@ -399,7 +414,7 @@ because of the fourth one.
 
 - Spec Kit's constitution is a stable slot. Its templates ship with the CLI, so the
   shape tracks upstream.
-- The probe suite runs against the models the team actually uses, not a fixed list.
+- The recognition suite runs against the models the team actually uses, not a fixed list.
 - The four generic skills carry judgement that no lint rule can express, which is why
   they become experts rather than gates.
 - `NOTICE.md` continues to govern what enters this repository.
@@ -408,7 +423,7 @@ because of the fourth one.
 
 - The organisation-specific skills stay where they are. No generic rewrite here.
 - V1 is not retired. It keeps its history and its Sei-local content.
-- The probe questions are not written here. This spec requires them; `plan.md`
+- The recognition questions are not written here. This spec requires them; `plan.md`
   designs them.
 - The file layout beyond the four channels is a `plan.md` decision.
 
@@ -417,7 +432,7 @@ because of the fourth one.
 1. **Where does the contract physically live** so that it is loaded by every harness and
    not only by one? Spec Kit's constitution is read by the Spec Kit phases. A root
    context file is read by the session. These are perhaps the same file.
-2. **What is the failing threshold for a probe?** Published practice uses 80% and 50%
+2. **What is the failing threshold for a recognition test?** Published practice uses 80% and 50%
    bands. Adopting them without measuring our own anchors would be borrowing a number.
 3. **Do the four generic skills become experts, or does one expert absorb several?**
    Four narrow experts have the same recall problem as four skills.

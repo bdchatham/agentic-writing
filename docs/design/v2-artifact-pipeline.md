@@ -189,6 +189,6 @@ decide who acts before writing the sentence. That is the cost, and it is also th
 
 - `specs/001-anchored-agentic-tooling/spec.md` — the four channels this shape fills.
 - `docs/writing-modes.md` — the existing three gates and how to add a fourth.
-- `anchors/registry.yaml` — steward, licence and probe status per anchor.
+- `anchors/registry.yaml` — steward, licence and recognition status per anchor.
 - Semantic Anchors — <https://llm-coding.github.io/Semantic-Anchors/>
 - Kiro documentation — <https://kiro.dev/docs/cli/>
