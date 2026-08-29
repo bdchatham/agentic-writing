@@ -179,6 +179,17 @@ install_repo() {
     say "  that has none. cd to the project you meant." >&2
     exit 2
   fi
+  # Installing the toolkit into the toolkit. It writes a consumer workflow beside
+  # the reusable one it calls, appends to .gitignore, and drops a .vale/ tree that
+  # the repository's own config does not use. Nothing here is destructive and all
+  # of it is wrong, so it is easier to refuse than to explain. A test that wants a
+  # scratch repository has to cd into one first; that is how this was found.
+  if [ -f "$root/templates/consumer.vale.ini" ] && [ -d "$root/styles/AgenticWriting" ]; then
+    say "refusing: $root is agentic-writing itself." >&2
+    say "  This mode wires a CONSUMING repository into the checks. Run it from the" >&2
+    say "  repository you want checked, not from the one holding the rules." >&2
+    exit 2
+  fi
   say "agentic-writing: repository install in $root (pinning ref $REF)"
   say "  This is the CI path. One engineer trying the framework needs only the"
   say "  machine install, which requires nothing here."
