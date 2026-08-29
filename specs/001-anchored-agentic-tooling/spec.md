@@ -45,7 +45,7 @@ Every term this specification uses in a specific sense.
   name, scored on recognition, accuracy, depth and specificity. The method is in
   `evals/recognition/README.md`. No suite runs it yet.
 - **Verdict**: a recognition-test result, one of strong, partial or absent, recorded
-  with the model identifier, the date, and the answer it was scored from.
+  with the model identifier, the date, and the answer behind it.
 - **Admitted**: an anchor carrying all four admission artifacts.
 - **Grandfathered**: an anchor predating the admission rule, exempt and counted.
 - **Writing mode**: a document type with a structure contract, selected by path.
@@ -113,7 +113,7 @@ Four channels. Each convention belongs to exactly one.
 | Channel | How it reaches an engineer | Holds |
 |---|---|---|
 | **Contract** | Always loaded, no invocation | The anchors, and the local rules that have no prior |
-| **Evidence** | Read when a claim is questioned | Per anchor: steward, licence, the question, verdict, date |
+| **Evidence** | Read when a reader doubts a claim | Per anchor: steward, licence, the question, verdict, date |
 | **Gate** | Blocks a merge | The checkable subset, as lint rules in CI |
 | **Expert** | Named by role | The persona that applies judgement a gate cannot |
 
@@ -152,7 +152,7 @@ slash command was invoked.
 ### User Story 2 - A reviewer can tell why a rule exists (Priority: P2)
 
 A reviewer disagrees with a finding. They follow the rule to the anchor, the anchor to
-its steward and licence, and the anchor to its verdict and the date it was taken.
+its steward and licence, and the anchor to its verdict and the date behind that verdict.
 They can then argue about the standard rather than about taste.
 
 **Why this priority**: An unexplained convention is the failure V1's README already
@@ -347,8 +347,8 @@ in `anchors/unregistered.txt` as a recorded debt. A name in neither fails the bu
 *Verifier:* `scripts/check-contract-anchors.sh`
 
 The criterion is not yet met. The contract names 19 anchors and the registry holds 7 of
-them; the other 12 are listed as debt. That list only shrinks, and a name leaves it by
-earning a registry entry with the four admission artifacts.
+them. `anchors/unregistered.txt` holds the other 12 as debt. That list only shrinks,
+and a name leaves it by earning a registry entry with the four admission artifacts.
 
 **SC-003** Every registry entry carries a verdict for the current default model.
 *Verifier:* not built — no recognition suite exists. `evals/recognition/README.md`
