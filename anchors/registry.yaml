@@ -158,6 +158,12 @@ anchors:
         - "Whether the chosen template matches the real requirement class."
         - "Whether the response is observable."
         - "Whether the actor named before SHALL is the system that acts."
+        - "A criterion in EARS form defeats STE-NounCluster. The tagger reads
+          uppercase THE, SHALL and THEN as nouns, so every well-formed criterion
+          looks like a four-noun run. Measured on the converted specification:
+          12 of 12 noun-cluster findings were EARS criteria. Vale's sequence
+          check rejects an exceptions key, so the rule cannot be taught the
+          keywords without becoming a script."
         - "A criterion outside a heading named 'Acceptance Criteria'. The scope
           is the heading text, so a differently named block is not checked.
           Spec-AcceptanceCriteria reports the absence of that heading, so the
