@@ -75,13 +75,28 @@ for rule, where in sorted(claimed.items()):
 # arc42 incident was false attribution, and an orphan check catches only a rule
 # with NO recorded purpose, never one with two conflicting purposes.
 reg = yaml.safe_load((root / 'anchors' / 'registry.yaml').read_text())
-cov_by_anchor = defaultdict(set)
+cov_by_anchor, declared = defaultdict(set), {}
 for f in sorted(cov_dir.glob('*.yml')):
     doc = yaml.safe_load(f.read_text())
     if isinstance(doc, dict) and doc.get('anchor'):
+        declared[doc['anchor']] = f.name
         for v in (doc.get('topics') or {}).values():
             if isinstance(v, list):
                 cov_by_anchor[doc['anchor']] |= set(v)
+# A coverage file for an anchor the registry does not list is never visited by
+# the loop below, so every claim in it passes unexamined. The admission gate
+# reads coverage/<id>.yml by name, so a file whose name and owner disagree is
+# the same hole wearing a different hat.
+# Read from the declared owner, not from the rules it credits. An anchor whose
+# topics are all `false` credits no rules, so a set built from the credits alone
+# does not contain it and the ghost passes.
+known = {a['id'] for a in reg['anchors']}
+for aid, fname in sorted(declared.items()):
+    if aid not in known:
+        bad.append(f"{fname}: claims anchor '{aid}', which the registry does not list — nothing cross-checks it")
+    if fname != f'{aid}.yml':
+        bad.append(f"{fname}: owns anchor '{aid}' — the admission gate reads coverage/{aid}.yml and will not find it")
+
 for a in reg['anchors']:
     want = {x.split('.', 1)[1] for x in (a['verifier'].get('rules') or [])}
     got = cov_by_anchor.get(a['id'], set())

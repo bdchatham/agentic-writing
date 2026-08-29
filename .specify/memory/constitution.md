@@ -162,15 +162,18 @@ An anchor arrives with four artifacts or it does not arrive. Naming a standard i
 and a catalogue that grows by naming becomes a list of things nobody checks.
 
 1. **A registry entry** — steward, licence, the probe, and what the anchor does not cover.
-2. **A fixture per rule** — an isolated golden file, so the rule cannot die silently.
+2. **A fixture per rule** — its own configuration, its own input, and a non-empty
+   golden file, so the rule cannot die silently. A directory missing a piece fails;
+   it is never skipped.
 3. **A coverage row** — which topics of the standard the rules reach, and which they do
    not. `false` is an expected answer.
 4. **A false-positive count** — measured over a corpus before any rule reaches `error`.
    A rule that fires often starts at `warning`, and the number says which.
 
-The anchors admitted before this rule are marked `grandfathered` in the registry. They
-are exempt, they are counted, and the count only shrinks. An anchor marked `admitted`
-must satisfy all four, and CI enforces it.
+The anchors admitted before this rule are marked `grandfathered` in the registry and
+listed in `anchors/grandfathered.txt`. They are exempt, they are counted, and the list
+only shrinks: CI compares it against `main` and fails on a line that was not there
+before. An anchor marked `admitted` must satisfy all four, and CI enforces it.
 
 This is what keeps the slope from being a slope: the next anchor is bounded by the same
 four artifacts, or it does not go in.
@@ -178,4 +181,4 @@ four artifacts, or it does not go in.
 An amendment states what changed and why, and bumps the version below. Deleting a
 principle requires the same ceremony as adding one.
 
-**Version**: 1.1.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28
+**Version**: 1.1.1 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28

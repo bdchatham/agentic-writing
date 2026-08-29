@@ -10,7 +10,7 @@ The block drifts silently until someone notices at review.
 
 ## Relevant experts
 
-* `platform-engineer` — the check mode and the CI workflow.
+* `build-engineer` — the check mode and the CI workflow.
 
 ## Proposed approach
 

@@ -67,6 +67,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # The admission gate compares anchors/grandfathered.txt against main to
+      # hold the list monotonic. A shallow clone has no main to compare with,
+      # and the gate says so rather than passing on one arm.
+      - name: Fetch main for the monotonicity comparison
+        run: git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
