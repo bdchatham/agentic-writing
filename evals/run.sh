@@ -2,7 +2,12 @@
 # Rule regression test: does each rule still find what it must find?
 # A rule that stops firing is a silent failure, and silent failures are the reason
 # a prompt-only approach cannot be trusted.
+#
+# The root is anchored to this script. Run from anywhere else it used to die on
+# `fixtures[@]: unbound variable`, which is loud but says nothing, and an empty
+# fixture list is a failure rather than a clean run over nothing.
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 command -v vale >/dev/null || { echo "vale not on PATH: https://vale.sh/docs"; exit 2; }
 command -v jq   >/dev/null || { echo "jq not on PATH"; exit 2; }
@@ -14,6 +19,11 @@ fail=0
 fixtures=()
 while IFS= read -r f; do fixtures+=("$f"); done \
   < <(find evals/fixtures -type f -name '*.md' | sort)
+
+if [ "${#fixtures[@]}" -eq 0 ]; then
+  echo "no fixtures under evals/fixtures — refusing to report success on an empty set"
+  exit 1
+fi
 
 for fixture in "${fixtures[@]}"; do
   # Mirror the fixture's path under evals/expected, so two fixtures in different

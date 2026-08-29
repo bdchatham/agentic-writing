@@ -10,6 +10,7 @@
 # This asserts each delta is still present. It is a marker check, not a diff:
 # the wording inside a section is free to change, the section is not.
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 T=".specify/templates/spec-template.md"
 U=".specify/templates/spec-template.upstream.md"
