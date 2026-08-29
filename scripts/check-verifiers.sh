@@ -16,8 +16,22 @@
 #
 # The first must name a path that exists. The other two must give a reason, because
 # "not built" with no explanation is a shrug rather than a statement.
+#
+# BOTH LAYOUTS COUNT. The first version demanded '**SC-001**' at column zero and an
+# unindented verifier, which is the shape specs/001 happens to use. The template
+# prescribes the other one:
+#
+#     - **SC-001**: [Measurable outcome.]
+#       *Verifier:* `[the command]`
+#
+# So the gate rejected the layout its own template teaches, and said the criteria did
+# not exist rather than that it could not read them. An agent following the template
+# produced exactly that file and the gate called it empty.
+#
+# Takes an optional root, which is how evals/gates/run.sh points it at a fixture tree.
 set -euo pipefail
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+ROOT="$(cd "$ROOT" && pwd)"
 exec python3 - "$ROOT" <<'PY'
 import pathlib, re, sys
 
@@ -28,26 +42,39 @@ if not specs:
     sys.exit(1)
 
 PATHISH = re.compile(r'(?:[\w.-]+/)+[\w.-]*|[\w.-]+\.(?:sh|py|yml|yaml|md|ini|txt)')
+# A criterion at the head of a line, or as a list item, with or without a colon.
+SC_LINE = re.compile(r'^[ \t]*(?:[-*+][ \t]+|\d+\.[ \t]+)?\*\*(SC-\d+)\*\*')
+# A verifier line, indented under its criterion or not.
+V_LINE = re.compile(r'^[ \t]*\*Verifier:\*')
+# Anything that looks like a criterion id, to tell "none" from "unreadable".
+SC_ANY = re.compile(r'\bSC-\d+\b')
 COMMANDS = {'vale'}          # a tool the repository already requires on PATH
 bad, rows = [], []
 
 for spec in specs:
     lines = spec.read_text().splitlines()
     rel = spec.relative_to(root)
-    criteria = [(i, l) for i, l in enumerate(lines) if re.match(r'^\*\*SC-\d+\*\*', l)]
+    criteria = [(i, m) for i, l in enumerate(lines) if (m := SC_LINE.match(l))]
     if not criteria:
-        bad.append(f"{rel}: no success criteria found — the file names none, or the shape changed")
+        loose = sorted({m.group(0) for l in lines for m in [SC_ANY.search(l)] if m})
+        if loose:
+            bad.append(f"{rel}: names {', '.join(loose[:4])} but in a shape this gate cannot "
+                       f"read. Write each as '**SC-001**' at the head of a line or of a list "
+                       f"item, with its '*Verifier:*' line under it")
+        else:
+            bad.append(f"{rel}: no success criteria found. A specification states what would "
+                       f"show it worked")
         continue
 
-    for idx, (i, head) in enumerate(criteria):
-        sc = re.match(r'^\*\*(SC-\d+)\*\*', head).group(1)
+    for idx, (i, m) in enumerate(criteria):
+        sc = m.group(1)
         end = criteria[idx + 1][0] if idx + 1 < len(criteria) else len(lines)
-        vlines = [l for l in lines[i:end] if l.startswith('*Verifier:*')]
+        vlines = [l for l in lines[i:end] if V_LINE.match(l)]
         if len(vlines) != 1:
             bad.append(f"{rel} {sc}: has {len(vlines)} verifier lines, expected exactly one")
             continue
 
-        body = vlines[0][len('*Verifier:*'):].strip()
+        body = vlines[0].strip()[len('*Verifier:*'):].strip()
         marker = re.match(r'^(not built|judgement)\s+—\s+(.+)$', body)
         if marker:
             if len(marker.group(2)) < 15:
