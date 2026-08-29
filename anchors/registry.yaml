@@ -249,6 +249,11 @@ anchors:
         - AgenticWriting.ADR-Decision
         - AgenticWriting.ADR-Consequences
       not_checkable:
+        - "A required section quoted inside a nested fence. The section rules
+          toggle a flag on any fence marker, so a ``` inside a ~~~ block closes
+          it early. Vale exposes no markdown parser a rule can reach: scope:
+          heading reports per heading and cannot answer whether a document has
+          one at all."
         - "Whether Consequences states the real negative consequence."
         - "Whether a superseded record was superseded rather than edited. Vale reads
           one file and cannot see the pair."
