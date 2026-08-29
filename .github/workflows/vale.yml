@@ -78,6 +78,12 @@ jobs:
       - name: Coverage manifest is true
         run: ./scripts/check-coverage.sh
 
+      # An anchor arrives with four artifacts or it does not arrive. The
+      # anchors that predate the rule are marked grandfathered, counted on
+      # every run, and the count only shrinks.
+      - name: Every admitted anchor carries its four artifacts
+        run: ./scripts/check-admission.sh
+
       - name: Every registry rule reference resolves to a rule file
         run: |
           python3 - <<'PY'

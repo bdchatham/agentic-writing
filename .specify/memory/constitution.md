@@ -156,7 +156,26 @@ repository and cites the public anchor from there.
 **No artifact here names a private skill or agent as an authority.** If a rule matters,
 state the rule. A citation a reader cannot follow is not a citation. CI enforces this.
 
+### Admitting an anchor
+
+An anchor arrives with four artifacts or it does not arrive. Naming a standard is cheap,
+and a catalogue that grows by naming becomes a list of things nobody checks.
+
+1. **A registry entry** — steward, licence, the probe, and what the anchor does not cover.
+2. **A fixture per rule** — an isolated golden file, so the rule cannot die silently.
+3. **A coverage row** — which topics of the standard the rules reach, and which they do
+   not. `false` is an expected answer.
+4. **A false-positive count** — measured over a corpus before any rule reaches `error`.
+   A rule that fires often starts at `warning`, and the number says which.
+
+The anchors admitted before this rule are marked `grandfathered` in the registry. They
+are exempt, they are counted, and the count only shrinks. An anchor marked `admitted`
+must satisfy all four, and CI enforces it.
+
+This is what keeps the slope from being a slope: the next anchor is bounded by the same
+four artifacts, or it does not go in.
+
 An amendment states what changed and why, and bumps the version below. Deleting a
 principle requires the same ceremony as adding one.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-19
+**Version**: 1.1.0 | **Ratified**: 2026-08-19 | **Last Amended**: 2026-08-28
