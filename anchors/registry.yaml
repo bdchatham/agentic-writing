@@ -50,6 +50,7 @@ anchors:
       rules:
         - AgenticWriting.STE-SentenceLength-Procedure
         - AgenticWriting.STE-SentenceLength-Description
+        - AgenticWriting.STE-ParagraphLength
         - AgenticWriting.STE-Passive
         - AgenticWriting.STE-Contractions
         - AgenticWriting.STE-NounCluster

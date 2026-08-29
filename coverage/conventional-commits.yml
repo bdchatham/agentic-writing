@@ -1,0 +1,11 @@
+anchor: conventional-commits
+source: "Conventional Commits 1.0.0"
+total_topics: 2
+enumerated: full
+note: >-
+  Vale does not read commit messages, so no rule here can check this. The
+  registry records coverage as full because commitlint checks it in CI, which
+  is a different verifier and is named as such.
+topics:
+  subject-is-type-scope-description: false
+  breaking-change-is-marked: false

@@ -1,0 +1,17 @@
+anchor: ears
+source: "Mavin et al., Easy Approach to Requirements Syntax, RE'09"
+total_topics: 8
+enumerated: full
+note: >-
+  Five templates, plus the three properties that hold across all of them: a
+  response stated with SHALL, a named actor that performs it, and a criteria
+  block for them to live in.
+topics:
+  response-stated-with-shall: [EARS-CriterionShall]
+  criteria-block-is-present: [Spec-AcceptanceCriteria]
+  template-ubiquitous: false
+  template-event-driven: false
+  template-state-driven: false
+  template-unwanted-behaviour: false
+  template-optional-feature: false
+  named-actor-performs-the-response: false
