@@ -74,7 +74,10 @@ jobs:
       # The admission gate compares anchors/grandfathered.txt against main to
       # hold the list monotonic. A shallow clone has no main to compare with,
       # and the gate says so rather than passing on one arm.
-      - name: Fetch main for the monotonicity comparison
+      # Two lists are held monotonic against main: anchors/grandfathered.txt and
+      # anchors/unregistered.txt. A shallow clone has no main to compare with, and
+      # each gate says so rather than passing on one arm.
+      - name: Fetch main for the monotonicity comparisons
         run: git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
 
       - uses: actions/setup-python@v5
@@ -106,6 +109,20 @@ jobs:
       # configurations before this gate existed.
       - name: The consumer configuration scopes the same rules
         run: ./scripts/check-consumer-scoping.sh
+
+      # Three of the seven success criteria named a verifier nobody had built. A
+      # criterion citing a check that does not run reads exactly like one that passes.
+      - name: Every success criterion names a verifier that runs
+        run: ./scripts/check-verifiers.sh
+
+      # SC-002 in the other direction: the registry consistency job never read the
+      # contract, so twelve anchors the contract names had no entry at all.
+      - name: Every anchor the contract names resolves, or is recorded debt
+        run: ./scripts/check-contract-anchors.sh
+
+      # SC-005 and SC-006.
+      - name: Every artifact is inside its length limit
+        run: ./scripts/check-artifact-length.sh
 
       - name: Every registry rule reference resolves to a rule file
         run: |

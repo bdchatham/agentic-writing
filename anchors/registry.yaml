@@ -10,7 +10,9 @@
 #   verifier.coverage full | partial | none
 #                    How much of the standard Vale can check. `none` is a legitimate
 #                    value and it must be stated, not hidden.
-#   recognition       The probe that tests whether a model still resolves the term.
+#   recognition       The open question that tests whether a model still resolves
+#                     the term, the concepts a passing answer names, and every
+#                     recorded verdict. See evals/recognition/README.md.
 #                    `verified` is per model. An empty list means "not yet tested".
 
 version: 1
@@ -73,7 +75,7 @@ anchors:
           anchors to the Markdown list marker in raw text, so it also reads a
           fenced code sample whose line starts with a marker and an -ing word."
     recognition:
-      probe: "What concepts do you associate with 'ASD-STE100'?"
+      question: "What concepts do you associate with 'ASD-STE100'?"
       expect: [controlled language, approved dictionary, procedures versus descriptions, sentence length limits, aerospace maintenance]
       verified: []
 
@@ -102,7 +104,7 @@ anchors:
       rules: [AgenticWriting.RFC2119-Keywords]
       not_checkable: []
     recognition:
-      probe: "What concepts do you associate with 'RFC 2119'?"
+      question: "What concepts do you associate with 'RFC 2119'?"
       expect: [MUST, SHOULD, MAY, normative requirement levels, interoperability]
       verified: []
 
@@ -188,7 +190,7 @@ anchors:
         - "A heading indented up to three spaces, separated by a tab, or
           preceded by a byte-order mark. Setext headings are invisible."
     recognition:
-      probe: "What concepts do you associate with 'EARS requirements syntax'?"
+      question: "What concepts do you associate with 'EARS requirements syntax'?"
       expect: [ubiquitous, event-driven, state-driven, unwanted behaviour, optional feature, shall]
       verified: []
 
@@ -217,7 +219,7 @@ anchors:
       not_checkable:
         - "Mode purity is a judgement about intent, not a pattern in the text."
     recognition:
-      probe: "What concepts do you associate with 'Diátaxis'?"
+      question: "What concepts do you associate with 'Diátaxis'?"
       expect: [tutorial, how-to guide, reference, explanation, acquisition versus application]
       verified: []
 
@@ -257,7 +259,7 @@ anchors:
         MADR additions. The two rules stay on the ADR path in .vale.ini as a local
         contract; they are not evidence for this anchor.
     recognition:
-      probe: "What concepts do you associate with 'ADR according to Nygard'?"
+      question: "What concepts do you associate with 'ADR according to Nygard'?"
       expect: [context, decision, consequences, status, superseded, immutable]
       verified: []
 
@@ -296,7 +298,7 @@ anchors:
         delivered by rules that check something else. Those two are this repository's
         own design contract and stay, attributed to it rather than to arc42.
     recognition:
-      probe: "What concepts do you associate with 'arc42'?"
+      question: "What concepts do you associate with 'arc42'?"
       expect: [12 sections, building block view, runtime view, crosscutting concepts, quality requirements]
       verified: []
 
@@ -328,7 +330,7 @@ anchors:
         nothing here checks this anchor at all.
       not_checkable: []
     recognition:
-      probe: "What concepts do you associate with 'Conventional Commits'?"
+      question: "What concepts do you associate with 'Conventional Commits'?"
       expect: [feat, fix, BREAKING CHANGE, semver bump, scope]
       verified: []
 
@@ -356,6 +358,6 @@ anchors:
       not_checkable:
         - "Whether the first sentence is the actual bottom line."
     recognition:
-      probe: "What concepts do you associate with 'BLUF'?"
+      question: "What concepts do you associate with 'BLUF'?"
       expect: [conclusion first, military writing, executive summary, action required]
       verified: []

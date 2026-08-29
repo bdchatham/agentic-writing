@@ -31,7 +31,7 @@ together.**
   sharing the code's own wrong assumption.
 
 Independent review found all four, and found them **after** implementation. Four
-blinded reviewers dissented. One reproduced seven defects with real probes. That
+blinded reviewers dissented. One reproduced seven defects with working examples. That
 is the process working, late.
 
 Three of the author's own defects also passed the whole mechanical verifier
