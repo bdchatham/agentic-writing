@@ -43,6 +43,23 @@ else
   : > .vale/styles/config/vocabularies/Local/accept.txt
 fi
 
+# The config declares Packages, and those are not committed anywhere. They are
+# gitignored in agentic-writing, so the checkout that fetches the rules does not
+# carry them, and a consumer's runner has never run install.sh. Without this,
+# Vale stops with "style 'write-good' does not exist on StylesPath" before it
+# reads a single document — the whole check fails as a runtime error rather than
+# as a finding. The same step exists in this repository's own CI, where the
+# comment beside it says exactly this. It was in one workflow and not the other.
+if command -v vale >/dev/null 2>&1; then
+  vale sync >&2 || {
+    echo "vale sync failed; the declared packages are missing" >&2
+    exit 1
+  }
+else
+  echo "vale is not on PATH; install it before this script" >&2
+  exit 1
+fi
+
 if [ -n "$GIVEN" ]; then
   files="$GIVEN"
   echo "Linting the caller's paths: $files" >&2

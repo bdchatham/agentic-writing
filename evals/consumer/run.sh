@@ -66,9 +66,26 @@ check "config records the same ref" "$ref" \
 check "fetched rules are gitignored" "yes" \
   "$(grep -qxF '.vale/styles/' .gitignore && echo yes || echo no)"
 
-# From here the script mirrors what the reusable workflow does, by calling the
-# same script it calls.
-mkdir -p .vale/src && cp -R "$root/styles" .vale/src/ && cp -R "$root/scripts" .vale/src/
+# From here the script stops being the laptop and becomes the runner.
+#
+# A runner starts from a fresh checkout. .vale/styles/ and .vale/src/ are
+# gitignored, so neither arrives, and install.sh never runs there — the only
+# thing CI executes is the reusable workflow. Deleting them is what makes this
+# half a test of that workflow rather than a second test of the installer.
+rm -rf .vale/styles .vale/src
+
+# COPY ONLY WHAT GIT TRACKS. CI fetches the rules with actions/checkout, which
+# never carries a gitignored path, and styles/write-good and styles/proselint are
+# gitignored here — they arrive by `vale sync`, not by checkout. The first draft
+# copied the whole working tree, so the packages a laptop already had made the
+# test pass over a consumer path that fails on a clean runner.
+# TRACKED PATHS, WORKING-TREE CONTENT. `git archive HEAD` would test the last
+# commit rather than the change in hand, which is a confusing way to iterate.
+# Listing tracked files instead keeps the property that matters — a gitignored
+# path never arrives, because actions/checkout never carries one — while still
+# testing what is about to be pushed.
+mkdir -p .vale/src
+( cd "$root" && git ls-files -z styles scripts | tar -cf - --null -T - ) | tar -xf - -C .vale/src
 files="$(./.vale/src/scripts/consumer-lint-setup.sh .vale/src 2>/dev/null)"
 check "path selection skips what does not exist" '["README.md","docs","specs"]' "$files"
 
