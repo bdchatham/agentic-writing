@@ -34,8 +34,11 @@ Every term this specification uses in a specific sense.
 
 - **Anchor**: a public standard the model already holds, named rather than restated,
   and only after a probe records that it resolves.
-- **Contract**: a local rule, or a term with a weak prior, stated in full because
-  naming it would not carry it.
+- **Stated rule**: a local rule, or a term with a weak prior, written out in full
+  because naming it would not carry it. The counterpart of an anchor.
+- **The contract**: the single always-loaded file holding the anchors and the stated
+  rules, at `.specify/memory/constitution.md`. Where this specification says "the
+  contract" it means that file, never the category above.
 - **Gate**: a command that measures an artifact and can block a merge.
 - **Expert**: a persona addressable by role name, applying judgement a gate cannot.
 - **Probe**: the deterministic multiple-choice test of whether a model resolves an
@@ -238,7 +241,7 @@ or remembering a command.
 2. **FR-002** WHERE a probe records that a model resolves a public standard, THE
    author SHALL express that convention as an anchor.
 3. **FR-003** WHERE a convention has no public standard, or no passing verdict, THE
-   contract SHALL state it in full.
+   contract SHALL carry it as a stated rule rather than as an anchor.
 4. **FR-004** THE contract SHALL state, for each convention, whether a gate checks it.
 5. **FR-005** IF a convention cannot be checked, THEN THE contract SHALL say so rather
    than leave the reader to assume a check exists.

@@ -43,6 +43,6 @@ Tengo
 [Vv]endor
 [Vv]endored
 [Vv]endoring
-config
+[Cc]onfig
 [Ll]inter'?s?
-traceback
+[Tt]raceback

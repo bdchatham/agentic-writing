@@ -178,9 +178,13 @@ anchors:
           such as a table row or a lazy continuation belonging to the next item."
         - "A criterion split by a blank line inside a loose list item. The blank
           line closes the item, so the second half is not seen."
-        - "Suppression. A `scope: raw` rule does not honour '<!-- vale off -->',
-          so an author who hits a false positive has no escape hatch except
-          editing the prose."
+        - "Suppression is total and invisible. '<!-- vale off -->' DOES silence
+          a scope: raw rule, including at a position before the directive, so a
+          single unbalanced comment turns the whole error gate off for a
+          document. Measured on this repository's own specification: deleting
+          one '<!-- vale on -->' line took it from 57 findings to 4. Vale owns
+          that behaviour; whether a specification may carry the directive at all
+          is ours to decide, and is undecided."
         - "A heading indented up to three spaces, separated by a tab, or
           preceded by a byte-order mark. Setext headings are invisible."
     recognition:
@@ -315,9 +319,13 @@ anchors:
       text: >-
         `type(scope)!: description`.
     verifier:
-      coverage: full
+      coverage: none
       rules: []
-      note: "Checked by commitlint in CI, not by Vale. Vale does not read commit messages."
+      note: >-
+        Coverage is none. It read `full` on the strength of commitlint checking
+        it in CI, and no commitlint exists in this repository: no configuration,
+        no workflow step, no dependency. Vale cannot read a commit message, so
+        nothing here checks this anchor at all.
       not_checkable: []
     recognition:
       probe: "What concepts do you associate with 'Conventional Commits'?"
