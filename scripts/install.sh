@@ -253,6 +253,13 @@ install_repo() {
 # Terms this repository accepts, one per line, case-sensitive. Commit this file.
 # The rules ship their own vocabulary and overwrite it on every install, so a
 # term that belongs to this repository belongs here.
+#
+# Start with your hyphenated identifiers. Vale reads YAML frontmatter as prose,
+# so a line like `name: my-thing-specialist` is checked like a sentence.
+#
+# Add a hyphenated name, not a bare word. An entry here is not a permission; it
+# is the one correct casing, and every other form becomes an error. `evm` makes
+# `evm` wrong wherever you wrote `EVM`. A hyphenated name collides with nothing.
 VOCAB
   fi
   run mkdir -p "$root/.vale/styles/config/vocabularies/Local"

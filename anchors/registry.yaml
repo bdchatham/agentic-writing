@@ -71,6 +71,14 @@ anchors:
           part-of-speech tagger misses some clusters and tags a verb such as 'fails'
           as a noun, so STE-NounCluster reports a false positive as well as a false
           negative. It stays at suggestion level for that reason."
+        - "An identifier in YAML frontmatter. Vale reads a Markdown file's
+          frontmatter as prose, so `name: configmap-auditor` matches at the
+          lowercase `configmap` inside it and Vale.Terms reports the wrong casing
+          against the vocabulary's `ConfigMap`. ASD-STE100 keeps an identifier verbatim, so this is a false
+          positive, and the frontmatter of every Claude Code skill and agent
+          file carries one. TokenIgnores and BlockIgnores do not suppress it, in
+          three forms tried; only a vocabulary entry does. A consuming repository
+          seeds its own, and templates/consumer.vale.ini says how."
         - "Whether a list item is a real instruction. STE-Gerund-Instruction
           anchors to the Markdown list marker in raw text, so it also reads a
           fenced code sample whose line starts with a marker and an -ing word."
