@@ -15,7 +15,11 @@
 # reusable workflow runs and compares the lint output against a golden file.
 #
 # NOT COVERED, and worth saying: the vale-action step, reviewdog's reporting, and
-# the cross-repository checkout that fetches the rules. Those need real GitHub.
+# the cross-repository checkout that fetches the rules. Those need real GitHub,
+# and the checkout is where the first real consumer run failed — the workflow read
+# github.workflow_ref, which is the caller's entry workflow, so it asked for a
+# pull-request ref that exists only in the caller. Nothing local could see that.
+# The assertion below is what a local test CAN hold: the right variable name.
 set -uo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 ref="${GITHUB_SHA:-$(git -C "$root" rev-parse HEAD)}"
@@ -65,6 +69,11 @@ check "config records the same ref" "$ref" \
   "$(grep -o 'pinned to: .*' .vale.ini | sed 's/pinned to: //')"
 check "fetched rules are gitignored" "yes" \
   "$(grep -qxF '.vale/styles/' .gitignore && echo yes || echo no)"
+
+# The one thing a local test can say about the cross-repository checkout.
+check "the workflow resolves its own ref, not the caller's" "job_workflow_ref" \
+  "$(grep -o 'github\.job_workflow_ref' "$root/.github/workflows/writing-contract.yml" \
+     | head -1 | sed 's/github\.//')"
 
 # From here the script stops being the laptop and becomes the runner.
 #
