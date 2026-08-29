@@ -26,6 +26,11 @@ All five carry no recorded verdict. This specification describes the suite that
 would produce one. Until it runs, treat a surprising reading of these five rows
 as the anchor failing rather than the model disagreeing.
 
+Two of the five go further: INVEST and Gherkin have no registry entry at all, so
+they hold no question to ask. `anchors/unregistered.txt` records them, with ten
+others the contract names. The suite cannot test an anchor the registry does not
+hold, so that list bounds what a first run can cover.
+
 ## Glossary
 
 - **Anchor**: a public standard the catalogue names, on the bet that a model
@@ -318,9 +323,14 @@ standard text inside the suite, so that the whole record stays open.
 
 ## Success Criteria *(mandatory)*
 
-**SC-001**: Every anchor the catalogue names holds at least one record with a
+**SC-001**: Every anchor **the registry holds** carries at least one record with a
 verdict, a model identifier, a date, and the raw answer.
 *Verifier:* not built — the recognition suite and its registry check do not exist.
+
+The criterion reads on the registry, not on the catalogue. The contract names 19
+anchors and the registry holds 7. A criterion written against the catalogue could
+not pass until twelve unrelated entries existed. Closing that gap is
+`anchors/unregistered.txt`, not this suite.
 
 **SC-002**: A run against a new model identifier names every anchor that dropped,
 before a person reads any answer.
