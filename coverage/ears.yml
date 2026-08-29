@@ -15,3 +15,59 @@ topics:
   template-unwanted-behaviour: false
   template-optional-feature: false
   named-actor-performs-the-response: false
+
+false_positives:
+  corpus: PURE
+  corpus_url: https://zenodo.org/records/7118517
+  corpus_licence: CC-BY-4.0
+  corpus_citation: >-
+    Ferrari, Spagnolo, Gnesi. "PURE: A Dataset of Public Requirements
+    Documents." 25th IEEE International Requirements Engineering Conference,
+    2017.
+  measured: 2026-08-28
+  method: >-
+    PURE ships 18 requirements documents as XML. Each <req> element was
+    rendered as a numbered item under an "Acceptance Criteria" heading, because
+    the rule is section-scoped and would otherwise never run: a zero would then
+    read as "no false positives" when it means "never executed". A second,
+    adversarial sample rendered ordinary prose blocks the same way, to ask
+    whether the rule misfires on text that is not a requirement at all. The
+    corpus is downloaded at measurement time and not vendored here.
+  rules:
+    EARS-CriterionShall:
+      requirements_sample:
+        documents: 6
+        items: 979
+        flagged: 370
+        rate: 0.378
+        false_positives: 0
+      adversarial_sample:
+        documents: 12
+        items: 2798
+        flagged: 2339
+        rate: 0.836
+        false_positives: 0
+      severity: error
+      severity_note: >-
+        Zero false positives across 3,777 items: not one flagged item contained
+        SHALL, so every flag was correct by the rule's definition. That is what
+        justifies error. The flag rate measures the document's house style
+        rather than the rule — one corpus document writes shall and scores 5.1%,
+        another writes must and scores 100%. The adversarial rate is the number
+        to watch: the rule's precision comes from the section scope, not from
+        the predicate, so anything that is not a criterion sitting inside the
+        criteria section floods.
+    Spec-AcceptanceCriteria:
+      corpus_sample:
+        documents: 18
+        fired: 0
+        false_positives: 0
+      negative_control: >-
+        Fires exactly once on a document with no criteria heading, and once on
+        a document whose only heading sits inside a fenced code block.
+      severity: warning
+      severity_note: >-
+        A document-level presence check, so a sentence corpus cannot exercise
+        it directly. It stayed silent on all 18 documents once the heading was
+        present. Warning rather than error while specifications written before
+        the template still emit Spec Kit's Acceptance Scenarios paragraph.
